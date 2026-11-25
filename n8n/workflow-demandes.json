@@ -1,0 +1,54 @@
+{
+  "name": "Artisans France : demandes et candidatures par e-mail",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "artisansfrance-demandes",
+        "authentication": "headerAuth",
+        "responseMode": "onReceived",
+        "options": {}
+      },
+      "id": "a1f0c2d4-0001-4a00-9000-000000000001",
+      "name": "Webhook formulaires",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [0, 0],
+      "webhookId": "artisansfrance-demandes"
+    },
+    {
+      "parameters": {
+        "jsCode": "const esc = (v) => String(v ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\"/g, '&quot;');\nconst item = $input.first().json;\nconst b = item.body ?? item;\n\n// Les événements de mesure (début de formulaire, étapes) ne déclenchent pas d'e-mail.\nif (!b || b.type === 'evenement' || !['demande', 'candidature'].includes(b.type)) return [];\n\nconst AMPLEUR = { petit: 'Petit chantier, intervention ciblée', moyen: 'Chantier de taille moyenne', grand: 'Gros chantier, plusieurs corps de métier', nsp: 'Ne sait pas encore' };\nconst DELAI = { urgent: 'Urgent', '1mois': 'Dans le mois', '3mois': 'Dans les trois mois', '6mois': 'Dans les six mois', plus: 'Plus tard ou pas de date' };\nconst BUDGET = { moins5k: 'Moins de 5 000 €', '5-10k': '5 000 à 10 000 €', '10-20k': '10 000 à 20 000 €', '20-40k': '20 000 à 40 000 €', plus40k: 'Plus de 40 000 €', nsp: 'Ne sait pas encore' };\nconst STATUT = { proprietaire: 'Propriétaire occupant', bailleur: 'Propriétaire bailleur', locataire: 'Locataire', autre: 'Autre' };\nconst oui = (x) => (x ? 'oui' : 'non');\nconst row = (k, v) => `<tr><td style=\"padding:6px 14px 6px 0;color:#55524d;vertical-align:top\">${esc(k)}</td><td style=\"padding:6px 0\"><strong>${esc(v)}</strong></td></tr>`;\nconst table = (rows) => `<table style=\"border-collapse:collapse;font-family:Arial,sans-serif;font-size:15px\">${rows.join('')}</table>`;\n\nconst c = b.contact ?? {};\nconst nom = `${c.prenom ?? ''} ${c.nom ?? ''}`.trim();\nlet subject, html;\n\nif (b.type === 'demande') {\n  const q = b.qualification ?? {};\n  const s = b.source ?? {};\n  subject = `Nouvelle demande de chantier : ${b.trade} ${b.codePostal} (qualification ${q.score ?? '?'}/4)`;\n  html = `<h2 style=\"font-family:Arial,sans-serif;color:#1f3a5f\">Nouvelle demande de chantier</h2>` + table([\n    row('Reçue le', b.receivedAt),\n    row('Métier', b.trade),\n    row('Travaux', b.travaux),\n    row('Ampleur', AMPLEUR[b.ampleur] ?? b.ampleur),\n    row('Code postal', `${b.codePostal} (département ${b.deptCode ?? '?'})`),\n    row('Délai souhaité', DELAI[b.delai] ?? b.delai),\n    row('Budget', BUDGET[b.budget] ?? b.budget),\n    row('Statut', STATUT[b.statut] ?? b.statut),\n    row('Nom', nom),\n    row('Téléphone', c.telephone),\n    row('E-mail', c.email),\n    row('Transmission aux partenaires acceptée', oui(b.consentement?.transmissionPartenaires)),\n    row('Département couvert par le réseau', oui(b.couvert)),\n    row('Score de qualification', `${q.score ?? '?'} / 4`),\n    row('  budget confirmé', oui(q.budgetConfirme)),\n    row('  projet à moins de 3 mois', oui(q.projetProche)),\n    row('  chantier au-dessus du seuil', oui(q.auDessusDuSeuil)),\n    row('  propriétaire', oui(q.proprietaire)),\n    row('Page d\\'origine', s.url),\n    row('Mot-clé de la page', s.keyword ?? ''),\n    row('Ville de la page', s.ville ?? ''),\n  ]);\n} else {\n  subject = `Candidature artisan : ${b.entreprise} (${b.trade})`;\n  html = `<h2 style=\"font-family:Arial,sans-serif;color:#1f3a5f\">Nouvelle candidature d'artisan</h2>` + table([\n    row('Reçue le', b.receivedAt),\n    row('Entreprise', b.entreprise),\n    row('SIREN', b.siren),\n    row('Métier', b.trade),\n    row('Départements', b.departements),\n    row('Contact', nom),\n    row('Téléphone', c.telephone),\n    row('E-mail', c.email),\n    row('Message', b.message ?? ''),\n  ]);\n}\n\nreturn [{ json: { subject, html, replyTo: c.email ?? '' } }];"
+      },
+      "id": "a1f0c2d4-0002-4a00-9000-000000000002",
+      "name": "Construire l'e-mail",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [260, 0]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "send",
+        "sendTo": "contact.artisansfrance@gmail.com",
+        "subject": "={{ $json.subject }}",
+        "emailType": "html",
+        "message": "={{ $json.html }}",
+        "options": {
+          "appendAttribution": false,
+          "replyTo": "={{ $json.replyTo }}"
+        }
+      },
+      "id": "a1f0c2d4-0003-4a00-9000-000000000003",
+      "name": "Envoyer depuis agence.celexia@gmail.com",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [520, 0]
+    }
+  ],
+  "connections": {
+    "Webhook formulaires": { "main": [[{ "node": "Construire l'e-mail", "type": "main", "index": 0 }]] },
+    "Construire l'e-mail": { "main": [[{ "node": "Envoyer depuis agence.celexia@gmail.com", "type": "main", "index": 0 }]] }
+  },
+  "settings": { "executionOrder": "v1" }
+}

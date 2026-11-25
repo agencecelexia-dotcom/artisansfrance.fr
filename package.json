@@ -13,7 +13,8 @@
     "data": "node scripts/build-pages.mjs && node scripts/fetch-geo.mjs && node scripts/fetch-local.mjs",
     "qa": "node scripts/qa.mjs",
     "typecheck": "tsc --noEmit",
-    "qa:gate": "node scripts/qa.mjs --gate"
+    "qa:gate": "node scripts/qa.mjs --gate",
+    "test:webhook": "node --env-file=.env scripts/test-webhook.mjs"
   },
   "dependencies": {
     "next": "16.4.6",
