@@ -1,0 +1,144 @@
+@import "tailwindcss";
+
+/*
+  Design system Artisans France.
+  Palette imposée par le brief : ardoise #1F3A5F, terre cuite #C2552D (boutons d'action seulement),
+  sable #F6F1EA, anthracite #2B2B2B. Titres Manrope, texte Inter.
+*/
+@theme {
+  --font-display: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
+  --color-ardoise-50: #f2f5f9;
+  --color-ardoise-100: #e1e8f1;
+  --color-ardoise-200: #c3d0e1;
+  --color-ardoise-300: #97abc7;
+  --color-ardoise-400: #6a86ab;
+  --color-ardoise-500: #476790;
+  --color-ardoise-600: #34507a;
+  --color-ardoise-700: #1f3a5f;
+  --color-ardoise-800: #183050;
+  --color-ardoise-900: #112240;
+  --color-ardoise-950: #0b1730;
+
+  --color-terre-50: #fdf4f0;
+  --color-terre-100: #fae5db;
+  --color-terre-200: #f4c8b5;
+  --color-terre-500: #c2552d;
+  --color-terre-600: #a8441f;
+  --color-terre-700: #8a381b;
+
+  --color-sable-50: #fbf9f5;
+  --color-sable-100: #f6f1ea;
+  --color-sable-200: #ece3d6;
+  --color-sable-300: #dccfbb;
+
+  --color-anthracite: #2b2b2b;
+  --color-texte-doux: #55524d;
+
+  --radius-ui: 6px;
+}
+
+@layer base {
+  html {
+    font-size: 17px;
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
+  }
+
+  body {
+    background: #fff;
+    color: var(--color-anthracite);
+    font-family: var(--font-sans);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    letter-spacing: -0.022em;
+    line-height: 1.15;
+    color: var(--color-ardoise-800);
+    text-wrap: balance;
+  }
+
+  /* Focus clavier visible partout ; la couleur change sur fond sombre. */
+  :focus-visible {
+    outline: 3px solid var(--color-terre-500);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+  .sur-ardoise :focus-visible {
+    outline-color: var(--color-sable-100);
+  }
+}
+
+@layer components {
+  /*
+    Motif d'écailles d'ardoise : l'élément mémorable du site, réservé à la bande d'ouverture et au pied de page.
+    Deux rangées d'arcs décalées, en traits très discrets.
+  */
+  .ecailles {
+    background-color: var(--color-ardoise-700);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='36' viewBox='0 0 56 36'%3E%3Cg fill='none' stroke='%23ffffff' stroke-opacity='.09' stroke-width='1'%3E%3Cpath d='M0 18a28 18 0 0 0 56 0'/%3E%3Cpath d='M-28 0a28 18 0 0 0 56 0'/%3E%3Cpath d='M28 0a28 18 0 0 0 56 0'/%3E%3C/g%3E%3C/svg%3E");
+  }
+
+  /* Texte éditorial : listes, paragraphes et titres des gabarits. */
+  .texte > * + * {
+    margin-top: 1.1rem;
+  }
+  .texte h2 {
+    font-size: 1.65rem;
+    margin-top: 2.6rem;
+  }
+  .texte h3 {
+    font-size: 1.2rem;
+    margin-top: 1.8rem;
+  }
+  .texte ul,
+  .texte ol {
+    padding-left: 1.3rem;
+  }
+  .texte ul {
+    list-style: disc;
+  }
+  .texte ol {
+    list-style: decimal;
+  }
+  .texte li + li {
+    margin-top: 0.4rem;
+  }
+  .texte li::marker {
+    color: var(--color-ardoise-400);
+  }
+  .texte a {
+    color: var(--color-ardoise-700);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1px;
+  }
+  .texte a:hover {
+    color: var(--color-terre-600);
+  }
+  .texte strong {
+    color: var(--color-ardoise-800);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+}

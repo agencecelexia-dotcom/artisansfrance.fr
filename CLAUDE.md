@@ -1,63 +1,80 @@
 # CLAUDE.md — artisansfrance.fr
 
-Projet de Celexia (CELEXIA SASU) : plateforme de **demandes de chantiers** pour particuliers, France entière, construite **from scratch**. L'ancien site (annuaire d'artisans Next.js) est abandonné ; il n'existe plus que dans l'historique git. Rien de l'ancien code, des anciens métiers ou de l'ancienne charte n'est à reprendre.
+Site de **demandes de chantiers** pour particuliers, France entière, édité par CELEXIA SASU. Modèle : apport d'affaires (l'artisan paie une commission, uniquement si le chantier est signé ; gratuit pour le particulier). Langue : français pour les textes, anglais pour les identifiants.
 
-Langue de travail : français (textes du site en français, code et identifiants en anglais).
+**Source de vérité : `document seo audit /`** (espace final dans le nom : toujours entre guillemets). Ne pas modifier ces fichiers. Le site est construit à partir d'eux ; voir « Données » ci-dessous.
 
-## État actuel
+AGENTS.md rappelle que Next.js 16 diffère de ce qu'on connaît : lire `node_modules/next/dist/docs/` avant de toucher aux APIs de Next.
 
-Le dépôt ne contient que le dossier `document seo audit /` (**espace final dans le nom** : toujours entre guillemets dans le shell). Aucune stack n'est encore choisie, aucun code n'existe.
+## Commandes
 
-## Source de vérité : `document seo audit /`
+```bash
+npm run dev            # développement (http://localhost:3000)
+npm run build          # build de production (seulement les pages des vagues publiées)
+PREVIEW_ALL=1 INDEXING=on npm run build   # build de TOUT le plan, pour auditer
+npm run qa             # audit du HTML généré -> reports/audit-site.md
+npm run typecheck && npm run lint
+npm run data           # régénère src/data/*.json (pages, géo, données locales) ; ~10 min, réseau requis
+```
 
-Ne pas modifier ces fichiers.
+## Règles non négociables (brief §0)
 
-| Fichier | Contenu | Usage |
-|---|---|---|
-| `brief-ia-artisansfrance.md` | Règles, architecture, gabarits, formulaire, mots-clés par section, GEO, concurrence, acquisition, roadmap, cadre légal, décisions ouvertes | **À lire avant toute page ou fonctionnalité** |
-| `plan-pages-artisansfrance.csv` | 2 055 pages à créer (`;`, UTF-8 BOM) : section, url, h1, métier, tier, mot-clé principal, volume, secondaires, **phase**, département, ville | Liste ordonnée de ce qu'il faut construire |
-| `artisansfrance-mots-cles.csv` | 8 880 requêtes (`;`, décimales avec virgule) : volume, CPC, difficulté, intention, score, océan bleu | Enrichir une page |
-| `artisansfrance-donnees.json` | `meta`, `datasets` (kpis, métiers, zones, départements, plateformes, GEO, architecture, acquisition, roadmap, légal), `mots_cles` avec historique mensuel (6 Mo) | Référence ; ne jamais le charger en entier côté client |
-| `Artisans France — plan machine à leads (France entière).pdf` | Plan en 15 p. : positionnement, DA, gabarits, liens, conversion, objectifs, garde-fous, prompt de départ | Vue d'ensemble |
-| `audit-seo-artisansfrance-clair.pdf` | Audit lisible, 107 p. (surtout tableaux de mots-clés) | Consultation |
+- **Aucun avis, note, nombre d'artisans/chantiers, « certifié » ou prix inventé.** Un prix n'est affiché que s'il est sourcé et daté ; sinon les guides expliquent ce qui fait varier le prix.
+- Page « Critères de classement et de sélection » (L111-7) liée depuis le pied de page de **toutes** les pages.
+- Formulaire : case de transmission aux partenaires **non cochée**, lien vers `/partenaires/`, droit d'opposition, qui rappelle et quand.
+- Pas de pages satellites : une page locale n'est indexable que si elle contient des données locales réelles (voir « Publication »).
+- Jamais de clé, mot de passe ou secret dans le code. Les secrets viennent de l'environnement.
+- Toute valeur inconnue est `null` dans `src/config/site.ts` : le site masque la phrase correspondante ou affiche un champ « à renseigner » (et passe la page en noindex). **Ne jamais inventer de valeur pour la remplir.**
 
-En cas de divergence avec ce fichier, le brief gagne.
+## Architecture
 
-## Cible (résumé du brief)
+```
+document seo audit /          sources (CSV du plan, mots-clés, JSON de l'audit, brief, PDF)
+scripts/
+  build-pages.mjs             plan CSV -> src/data/pages.json (nettoyage, fusions, slugs, vagues, saisonnalité, régions)
+                              + reports/plan-nettoyage.md et reports/couverture-mots-cles.md
+  fetch-geo.mjs               API Etalab + contours officiels -> src/data/geo.json (communes, voisins, adjacence)
+  fetch-local.mjs             DVF (DGFiP) et Géorisques -> src/data/local.json
+  qa.mjs                      audit du HTML généré (H1, title, canonical, JSON-LD, liens cassés, orphelines, unicité)
+  indexnow.mjs                notifie Bing/IndexNow des pages publiées
+src/config/site.ts            identité, décisions ouvertes (OPS), métiers/départements couverts, infos légales
+src/config/publication.ts     vagues publiées, INDEXING_ON, PREVIEW_ALL, seuils qualité
+src/lib/pages.ts              accès aux pages ; isPublished(), robotsFor() : TOUTE la logique de publication/indexation
+src/lib/seo.ts                metadata (title 60 car., description), JSON-LD (jamais d'avis ni de note)
+src/lib/form.ts, leads.ts     formulaire : options, validation, score de qualification ; envoi au webhook
+src/content/trades.ts         contenu des 17 hubs métier (écrit à la main, sans chiffre inventé)
+src/content/editorial.ts      guides (problèmes, aides, prix) : un guide n'existe que s'il est rédigé ici
+src/app/[metier]/...          hub, département (et région), ville : générés depuis pages.json
+src/app/{guides,aides,prix,devis}/[slug]   guides et devis
+src/app/api/{demande,candidature,evenement}   routes serveur -> LEADS_WEBHOOK_URL
+```
 
-**Modèle** : apport d'affaires. Celexia est rémunérée par l'artisan, uniquement sur chantier signé ; gratuit pour le particulier ; coordonnées jamais revendues. Qualification : budget confirmé, projet < 3 mois, chantier > 10 000 € (à confirmer), propriétaire décideur.
+URLs : métier en premier, slash final (`/couvreur/77-seine-et-marne/`, `/couvreur/33-gironde/bordeaux/`, `/prix/nettoyage-toiture/`, `/devis/toiture/`, `/guides/fuite-toiture/`, `/aides/aide-refaire-toiture/`).
 
-**Règles non négociables** (brief §0) :
-- Jamais d'avis, note, nombre d'artisans/chantiers ou « certification » inventés. Pas d'exclusivité promise ; dire combien d'artisans reçoivent la demande.
-- Page « Comment ça marche / critères de sélection et de classement » liée depuis toutes les pages (Code de la consommation L111-7).
-- Formulaire : case **non cochée** pour la transmission aux partenaires, lien vers la liste des partenaires, droit d'opposition (CNIL), dire qui rappelle et sous quel délai. Hors zone : mise en attente honnête.
-- Pas de pages satellites : une page département ou ville sans donnée locale propre n'est pas créée (fusionnée dans la page département).
-- Prix : fourchettes sourcées, datées, indicatives. Mentions légales complètes (CELEXIA SASU, SIREN, adresse, hébergeur), CGU, confidentialité.
-- Jamais de clé, mot de passe ou secret dans le code ou les fichiers.
+## Publication : trois verrous (plan §3.3)
 
-**URL** (métier en premier) : `/couvreur/`, `/couvreur/77-seine-et-marne/`, `/couvreur/44-loire-atlantique/nantes/` (ville seulement si ≥ 50 recherches/mois), `/prix/…`, `/devis/…`, `/guides/…`, `/aides/…`, `/comment-ca-marche/`, `/nos-artisans/`, `/classement-et-selection/`, `/artisans/` (espace B2B et recrutement), `/blog/…`.
+1. **Vague** (`PUBLISHED_WAVES` dans `publication.ts`) : une page hors vague n'existe pas (404). Vagues = `phase.lot` de `pages.json`, 100 pages par lot. Seule la vague `1.1` est publiée par défaut ; la phase 1 dépasse 500 pages, donc chaque lot suivant se publie après relecture (arrêt dur du skill seo-programmatic).
+2. **Porte qualité** (`robotsFor()` dans `pages.ts`) : page locale sans recherche et sans artisan couvert → noindex ; page locale avec moins de 3 blocs de données réelles → noindex.
+3. **Indexation globale** : `INDEXING=on` sur l'environnement de production. Sans elle, toutes les pages sont en noindex et `robots.txt` interdit tout le site. À activer après relecture des textes et complétion des pages légales.
 
-**Métiers** : niveau A (96 départements) = toiture/charpente, façade/ravalement, isolation extérieure, maçonnerie, extension, terrassement, menuiserie, bardage. Niveau B = paysagiste, pergola/véranda, clôture/portail, fosse septique, climatisation, rénovation intérieure, terrasse. Niveau C = piscine (guides de prix et devis seulement). Toiture d'abord.
+Un guide (prix, problème, aides) n'existe que s'il a un texte dans `editorial.ts`. Le build vérifie seulement ce qui est rédigé.
 
-**Phases** (colonne `phase`, 1 à 4) : on n'ouvre la suivante que si la précédente est indexée ; vagues de 50 à 150 pages/semaine. Commencer par le socle : gabarits, formulaire en étapes, pages fixes, pages légales.
+## Variables d'environnement
 
-**Gabarits et JSON-LD** : accueil (Organization, WebSite, FAQPage) ; hub métier et métier × zone (Service + areaServed, FAQPage, BreadcrumbList) ; guide de prix (Article, FAQPage) ; devis (Service, FAQPage) ; problèmes et aides (Article) ; sélection (AboutPage). Fil d'Ariane partout ; encadré « Vous êtes artisan dans ce département ? » sur les pages département.
+`LEADS_WEBHOOK_URL` (obligatoire en production : sans lui, `/api/demande` renvoie une erreur honnête, jamais un faux succès), `LEADS_WEBHOOK_SECRET`, `INDEXING=on`, `PREVIEW_ALL=1` (préproduction), `INDEXNOW_KEY`, `GOOGLE_SITE_VERIFICATION`, `BING_SITE_VERIFICATION`.
 
-**Formulaire** : métier/travaux → ampleur → code postal → délai → budget → statut → photos (facultatif) → coordonnées en dernier. Envoi vers le CRM Celexia (n8n / Supabase) avec score de qualification, page d'origine et mot-clé. Confirmation : qui rappelle, quand.
+## Décisions ouvertes (à demander à Thomas, jamais à deviner)
 
-**Direction artistique** : bleu ardoise `#1F3A5F`, terre cuite `#C2552D` (boutons d'action), fonds blanc et sable `#F6F1EA`, texte `#2B2B2B`. Titres Manrope ou Outfit, texte Inter. Vraies photos de chantiers avec accord, icônes au trait d'une seule famille. Mobile : bouton « Décrire mon chantier » fixé en bas, numéro cliquable.
+SIREN, adresse, directeur de la publication, e-mail, adresse de l'hébergeur (`COMPANY`) ; délai de rappel, nombre d'artisans par demande, durée de conservation des données (`OPS`) ; vérifications réellement faites sur les artisans (`SELECTION_CHECKS`) et critères de mise en relation (`MATCHING_CRITERIA`) ; départements couverts (`COVERED_DEPARTMENTS`) ; liste des partenaires (`PARTNERS`) ; médiateur de la consommation ; URL du webhook ; téléphone ; sources de prix ; relecture des textes (avocat de Celexia pour le cadre légal).
 
-**SEO / GEO** : ne pas bloquer les robots IA ; sitemap généré depuis le plan de pages ; Search Console, Bing Webmaster, IndexNow ; nom/adresse/SIREN identiques partout ; jamais d'achat de liens.
+## Données et honnêteté
 
-**Contenu** : chaque gabarit est généré depuis les données puis relu. Jamais 800 pages identiques où seul le nom de la ville change. Données locales : Etalab (communes, population), Insee, zones vent/neige, secteurs protégés, aides locales, chiffres réels Celexia quand ils existent.
-
-## Décisions ouvertes (demander à Thomas, ne pas deviner)
-
-Stack technique (à choisir ; garder en tête ~2 055 pages générées et un formulaire branché sur n8n/Supabase) ; départements et métiers ouverts au lancement ; nombre d'artisans par demande ; seuil de chantier et sort des petites demandes ; délai de rappel promis et qui rappelle ; ce que la sélection vérifie réellement ; sort des demandes hors zone ; validation du modèle juridique par l'avocat de Celexia.
+- Chaque donnée locale affichée a sa source et son millésime : Etalab (population, communes), DVF 2024 (ventes de maisons ; l'Alsace-Moselle et Mayotte ne sont pas couverts, la page le dit), Géorisques (risques), DataForSEO (volumes de recherche, jusqu'à octobre 2026).
+- Les prix médians DVF ne sont calculés qu'avec au moins 10 ventes, sinon `null`.
+- Ne jamais présenter un prix de vente immobilière comme un prix de travaux.
 
 ## Conventions
 
-- Valeur inconnue = constante nommée à fixer par Thomas, jamais un chiffre inventé.
-- Zones (départements, communes) : référentiel Etalab ou JSON d'audit, pas de saisie manuelle.
-- CPC en dollars (DataForSEO) ; volumes nationaux.
-- Commits conventionnels (`feat:`, `fix:`), comme dans l'historique.
+- Commits conventionnels (`feat:`, `fix:`, `chore:`).
+- Les pages `[metier]/...` sont génériques : ouvrir un métier = rédiger son contenu dans `trades.ts` (et ses guides dans `editorial.ts`), puis publier sa vague.
+- Après toute modification de gabarit : `PREVIEW_ALL=1 INDEXING=on npm run build && npm run qa`, et vérifier le contenu propre des pages locales (seuil 40 %, arrêt sous 30 %).
