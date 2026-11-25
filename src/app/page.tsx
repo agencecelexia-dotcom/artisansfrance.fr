@@ -11,7 +11,7 @@ import { buildMetadata } from "@/lib/seo";
 import { INDEXING_ON } from "@/config/publication";
 
 export const metadata: Metadata = buildMetadata({
-  title: "Artisans France : décrivez votre chantier, un artisan sélectionné vous contacte",
+  title: "Artisans France : un artisan sélectionné pour votre chantier",
   description: "Décrivez votre chantier en deux minutes : un conseiller étudie votre demande et vous met en relation avec un artisan sélectionné près de chez vous. Gratuit pour vous.",
   path: "/",
   index: INDEXING_ON,

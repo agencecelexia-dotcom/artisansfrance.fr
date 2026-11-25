@@ -2,10 +2,10 @@
 // ChatGPT s'appuie en partie sur l'index de Bing : envoyer chaque nouvelle vague accélère sa découverte.
 //
 // Prérequis : INDEXNOW_KEY défini sur l'environnement de production (le site sert la clé sur /indexnow-key.txt).
-// Usage : INDEXNOW_KEY=... node scripts/indexnow.mjs [https://artisansfrance.fr]
+// Usage : INDEXNOW_KEY=... node scripts/indexnow.mjs [https://www.artisansfrance.fr]
 //         Les URL envoyées sont celles du sitemap en production (donc seulement les pages indexables).
 
-const site = process.argv[2] ?? "https://artisansfrance.fr";
+const site = process.argv[2] ?? "https://www.artisansfrance.fr";
 const key = process.env.INDEXNOW_KEY;
 if (!key) {
   console.error("INDEXNOW_KEY manquant.");

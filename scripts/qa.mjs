@@ -12,7 +12,7 @@ import { fileURLToPath } from "node:url";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const appDir = join(root, ".next/server/app");
-const SITE = "https://artisansfrance.fr";
+const SITE = "https://www.artisansfrance.fr";
 
 function walk(dir) {
   const out = [];

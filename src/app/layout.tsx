@@ -14,7 +14,7 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "sw
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
-  title: { default: `${SITE.name} : décrivez votre chantier, un artisan sélectionné vous contacte`, template: `%s | ${SITE.name}` },
+  title: { default: `${SITE.name} : un artisan sélectionné pour votre chantier`, template: `%s | ${SITE.name}` },
   description: "Décrivez votre chantier : un conseiller étudie votre demande et vous met en relation avec un artisan sélectionné près de chez vous. Gratuit pour vous.",
   applicationName: SITE.name,
   robots: INDEXING_ON ? undefined : { index: false, follow: false },

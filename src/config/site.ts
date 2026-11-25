@@ -3,7 +3,9 @@
 
 export const SITE = {
   name: "Artisans France",
-  url: "https://artisansfrance.fr",
+  // Hôte canonique : celui qui sert réellement le site (l'adresse sans www redirige vers www sur Vercel).
+  // Si le domaine principal change dans Vercel, changer cette valeur : sitemap, canonicals et JSON-LD la suivent.
+  url: "https://www.artisansfrance.fr",
   tagline: "Décrivez votre chantier, on met en relation avec un artisan sélectionné près de chez vous",
   locale: "fr_FR",
 } as const;
