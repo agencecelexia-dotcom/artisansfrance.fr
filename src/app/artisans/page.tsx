@@ -5,7 +5,7 @@ import ArtisanForm from "@/components/ArtisanForm";
 import JsonLd from "@/components/JsonLd";
 import { textMetadata } from "@/components/TextPage";
 import { TRADES } from "@/content/trades";
-import { CONTENT_UPDATED } from "@/config/site";
+import { COMPANY, CONTENT_UPDATED } from "@/config/site";
 import { pagesOfType } from "@/lib/pages";
 import { serviceLd } from "@/lib/seo";
 
@@ -29,7 +29,7 @@ export default function Page() {
         h1="Recevez des demandes de chantiers dans votre département"
         lead="Des particuliers nous confient leurs chantiers. Nous les étudions, puis nous les confions à des artisans sélectionnés. Apport d'affaires BTP : une commission, uniquement si le chantier est signé."
         facts={["Pas de frais pour recevoir des demandes", "Aucune promesse de volume ni d'exclusivité", "Contrat d'apport d'affaires signé avant toute transmission"]}
-        aside={<ArtisanForm trades={trades.map((p) => ({ slug: p.trade!, nom: TRADES[p.trade!].nom }))} />}
+        aside={<ArtisanForm trades={trades.map((p) => ({ slug: p.trade!, nom: TRADES[p.trade!].nom }))} fallbackEmail={!process.env.LEADS_WEBHOOK_URL && process.env.NODE_ENV === "production" ? COMPANY.contactEmail ?? undefined : undefined} />}
       />
       <Container className="py-12">
         <div className="texte max-w-[68ch]">

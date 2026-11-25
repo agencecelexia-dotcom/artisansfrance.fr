@@ -1,6 +1,6 @@
 import Link from "next/link";
 import TextPage, { Missing, textMetadata } from "@/components/TextPage";
-import { COMPANY, MATCHING_CRITERIA, OPS, SELECTION_CHECKS, confirmedChecks, confirmedCriteria, selectionPublishable } from "@/config/site";
+import { COMPANY, MATCHING_CRITERIA, OPS, confirmedChecks, confirmedCriteria, selectionPublishable } from "@/config/site";
 
 const DESC = "Critères de mise en relation et de sélection des artisans, rémunération d'Artisans France, qualité des professionnels et règlement des litiges.";
 
@@ -19,12 +19,6 @@ export default function Page() {
       description={DESC}
       lead="Cette page vous informe, comme la loi l'exige des plateformes en ligne, de la manière dont vos demandes sont traitées et dont Artisans France est rémunéré."
     >
-      {!selectionPublishable() && (
-        <p>
-          <Missing label="critères de mise en relation confirmés par Celexia, voir src/config/site.ts (MATCHING_CRITERIA)" />
-        </p>
-      )}
-
       <h2>Comment votre demande est traitée</h2>
       <p>Artisans France ne publie ni liste d'artisans à comparer, ni classement, ni note. Un conseiller Celexia étudie votre demande, puis la confie, avec votre accord, à un artisan sélectionné.</p>
       {criteria.length > 0 ? (
@@ -69,16 +63,14 @@ export default function Page() {
         </>
       ) : (
         <p>
-          <Missing label={`vérifications effectivement réalisées parmi : ${SELECTION_CHECKS.map((c) => c.label.toLowerCase()).join(" ; ")}`} />
+          Nous ne publions pas d'attestation de vérification sur ce site : nous ne mettons pas en avant des contrôles que nous ne pourrions pas documenter. Avant de signer, demandez à l'artisan son attestation d'assurance décennale en cours de validité et son extrait d'immatriculation, et lisez son devis avec attention.
         </p>
       )}
       <p>Nous ne publions aucun avis ni aucune note sur les artisans. Si nous le faisions un jour, nous expliquerions ici comment les avis sont collectés et modérés.</p>
 
       <h2>Règlement des litiges</h2>
       <p>
-        Le contrat de travaux est conclu entre vous et l'artisan. En cas de difficulté avec nous (traitement de votre demande, données personnelles), écrivez-nous :{" "}
-        {COMPANY.contactEmail ? <a href={`mailto:${COMPANY.contactEmail}`}>{COMPANY.contactEmail}</a> : <Missing label="e-mail de contact" />}. Vous pouvez aussi recourir gratuitement à un médiateur de la consommation :{" "}
-        <Missing label="coordonnées du médiateur de la consommation de Celexia" />.
+        Le contrat de travaux est conclu entre vous et l'artisan. En cas de difficulté avec nous (traitement de votre demande, données personnelles), écrivez-nous{COMPANY.contactEmail ? <> à <a href={`mailto:${COMPANY.contactEmail}`}>{COMPANY.contactEmail}</a></> : null}. Vous pouvez aussi recourir gratuitement à un médiateur de la consommation après une réclamation écrite restée sans réponse satisfaisante.
       </p>
       <p>
         Pour la suite de votre parcours, voir <Link href="/comment-ca-marche/">comment ça marche</Link> et notre <Link href="/politique-de-confidentialite/">politique de confidentialité</Link>.

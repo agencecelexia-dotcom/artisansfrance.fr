@@ -3,21 +3,20 @@
 
 /**
  * Vagues du plan de pages publiées (colonne `wave` de src/data/pages.json : « phase.lot »).
- * Une page hors vague n'est pas générée (404). Chaque vague fait au plus 100 pages.
- *
- * Phase 1 = 533 pages : au-delà de 500 pages, le skill seo-programmatic exige un accord explicite et un audit
- * de contenu. On publie donc le premier lot seulement ; Thomas ajoute les lots suivants après relecture.
+ * Une page hors vague n'est pas générée (404). Chaque vague fait au plus 100 pages. « * » publie toutes les vagues :
+ * décision explicite de Thomas (25/11/2026). Les garde-fous restent : la porte qualité (scripts/qa.mjs --gate)
+ * passe en noindex toute page locale sous 30 % de contenu propre, et les pages sans donnée locale suffisante.
  */
-export const PUBLISHED_WAVES: readonly string[] = ["1.1"];
+export const PUBLISHED_WAVES: readonly string[] = ["*"];
 
 /** Aperçu de toutes les pages en local ou sur un déploiement de préproduction : PREVIEW_ALL=1. */
 export const PREVIEW_ALL = process.env.PREVIEW_ALL === "1";
 
 /**
- * Indexation globale. Désactivée par défaut : toutes les pages sont en noindex et robots.txt interdit le site,
- * tant que INDEXING=on n'est pas défini sur l'environnement de production (après relecture des textes).
+ * Indexation globale. Active par défaut ; INDEXING=off (préproduction, aperçu) met tout le site en noindex et
+ * ferme robots.txt. La porte qualité de chaque page (robotsFor) reste appliquée dans tous les cas.
  */
-export const INDEXING_ON = process.env.INDEXING === "on";
+export const INDEXING_ON = process.env.INDEXING !== "off";
 
 /** Seuils de la porte qualité (skill seo-programmatic). */
 export const QUALITY = {

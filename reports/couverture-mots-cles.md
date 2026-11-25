@@ -2,15 +2,15 @@
 
 Mots-clés dans l'audit : 8880 (12 175 880 recherches/mois).
 Placés par le plan d'origine : 2293.
-Rattachés automatiquement à une page existante : 758 (1 109 470 recherches/mois).
+Rattachés automatiquement à une page existante : 755 (1 109 200 recherches/mois).
 
 ## Ignorés, avec la raison
 
 | Raison | Mots-clés | Recherches/mois |
 |---|---|---|
-| Nom propre, marque, requête hors sujet | 577 | 1 587 120 |
-| Achat de produit ou de marque | 261 | 238 090 |
-| Requête générique d'un mot, trop disputée | 5043 | 7 730 070 |
+| Nom propre, marque, requête hors sujet | 607 | 1 600 480 |
+| Achat de produit ou de marque | 260 | 237 980 |
+| Requête générique d'un mot, trop disputée | 5036 | 7 721 120 |
 | Sans page cible | 0 | 0 |
 
 ## Rattachés automatiquement (à valider)

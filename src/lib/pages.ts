@@ -99,7 +99,7 @@ export const local = localData as unknown as {
 
 /** Une page existe seulement si sa vague est publiée et, pour les contenus éditoriaux, si le texte est rédigé. */
 export function isPublished(p: PlanPage): boolean {
-  if (!PREVIEW_ALL && !PUBLISHED_WAVES.includes(p.wave)) return false;
+  if (!PREVIEW_ALL && !PUBLISHED_WAVES.includes("*") && !PUBLISHED_WAVES.includes(p.wave)) return false;
   if (p.trade && !TRADES[p.trade]) return false;
   if (["prix", "probleme", "aides", "blog"].includes(p.type)) return hasEditorial(p.url);
   return true;
@@ -160,7 +160,7 @@ const km = (a: [number, number], b: [number, number]) => {
 };
 
 /** Les pages ville publiées les plus proches de cette ville (même au-delà du département), avec leur distance. */
-export function nearestPublishedCities(p: PlanPage, count = 6) {
+export function nearestPublishedCities(p: PlanPage, count = 8) {
   const here = communeOfPage(p);
   if (!here?.centre || !p.trade) return [];
   return cityPages(p.trade)

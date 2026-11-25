@@ -64,9 +64,9 @@ const NOISE = new RegExp(
     "didier", "transporteur", "sushi", "vs[ -]?code", "coupole", "diaphragm", "viveo", "afpah", "roland", "vérandahlia",
     "verandahlia", "bov[eé]", "nicolas", "franc[ -]?ma", "france ma", "sm ravalement", "leroy merlin",
     // famille « extension » polluée : cils, cheveux, Chrome, sport, informatique
-    "cils", "cheveux", "capillaire", "chrome", "triceps", "leg extension", "browser", "chromebook", "chromedriver",
+    "cils", "cheveux", "cheveu", "capillaire", "chrome", "triceps", "leg extension", "browser", "chromebook", "chromedriver",
     "wordpress", "firefox", "edge", "gaz", "chaudi[eè]re", "gazon", "cash", "maillot", "intex", "tubulaire", "gonflable",
-    "gonflante", "magazine", "lycée", "lycee", "clôture de compte", "cloture de compte", "forum",
+    "gonflante", "magazine", "gustave", "waterair", "canexel", "veranda-rideau", "vérandas rideau", "véranda rideau", "rideau de", "vie véranda", "vie-veranda", "combien gagne", "gagne un", "etai-de", "étai de", "ma[cç]on horaire", "paysagiste horaire", "macon-horaire", "paysagiste-horaire", "aide ma[cç]on", "aide-macon", "-avis", " avis", "lycée", "lycee", "clôture de compte", "cloture de compte", "forum",
   ].join("|"),
   "i",
 );
@@ -224,6 +224,74 @@ for (const r of plan) {
   });
 }
 
+
+// Pages dont l'intention est la même qu'une autre : la page supprimée apporte ses mots-clés à la page conservée.
+const MERGE = {
+  // prix : toiture et charpente
+  "/prix/toiture-m2-tuile/": "/prix/tuile-m2/", "/prix/pose-tuile-au-m2-sans-fourniture/": "/prix/pose-de-tuiles-au-m2/",
+  "/prix/ardoise-m2/": "/prix/toiture-ardoises-au-m2/", "/prix/pose-ardoise-m2/": "/prix/toiture-ardoises-au-m2/",
+  "/prix/charpente-et-toiture-100m2/": "/prix/charpente-m2/", "/prix/charpente-couverture-m2/": "/prix/charpente-m2/",
+  "/prix/ferme-charpente/": "/prix/charpente-fermette/", "/prix/pose-gouttiere-alu/": "/prix/pose-gouttiere/",
+  "/prix/pose-gouttiere-aluminium/": "/prix/pose-gouttiere/", "/prix/renovation-toiture-m2/": "/prix/toiture-m2/",
+  "/prix/store-toiture-veranda-exterieur/": "/prix/store-veranda-exterieur-electrique/",
+  "/prix/plaque-isolante-pour-toiture-veranda/": "/prix/changer-toit-veranda/", "/prix/toit-veranda-polycarbonate/": "/prix/changer-toit-veranda/",
+  // prix : maçonnerie, façade, extension
+  "/prix/peinture-murs-m2/": "/prix/peinture-murale-m2/", "/prix/pour-peindre-un-mur-m2/": "/prix/peinture-murale-m2/",
+  "/prix/pour-peindre-une-facade-m2/": "/prix/peinture-facade-m2/", "/prix/ravalement-m2/": "/prix/ravalement-de-facades/",
+  "/prix/ravalement-maison/": "/prix/ravalement-de-facades/", "/prix/crepis-m2/": "/prix/enduit-m2/",
+  "/prix/isolation-exterieure-crepi-m2/": "/prix/isolation-exterieure/", "/prix/isolation-par-l-exterieur-m2/": "/prix/isolation-exterieure/",
+  "/prix/escalier-en-bois-avec-pose/": "/prix/escalier-avec-pose/", "/prix/escalier-sur-mesure-avec-pose/": "/prix/escalier-avec-pose/",
+  "/prix/surelevation/": "/prix/surelevation-maison/", "/prix/beton-lave-m2/": "/prix/beton-desactive-m2/",
+  "/prix/chape-m2/": "/prix/chape-liquide-m2/", "/prix/beton-m2/": "/prix/dalle-beton-m2/",
+  "/prix/extension-veranda-m2/": "/prix/construction-veranda/",
+  // prix : intérieur, sols
+  "/prix/placostil-au-m2/": "/prix/placo-m2/", "/prix/placostyle-m2/": "/prix/placo-m2/", "/prix/pose-m2-placo/": "/prix/placo-m2/", "/prix/pose-placoplatre/": "/prix/placo-m2/",
+  "/prix/pose-m2-parquet/": "/prix/parquet-m2/", "/prix/pose-parquet-flottant/": "/prix/parquet-flottant-m2/",
+  "/prix/carrelage-m2/": "/prix/carrelage-m2-pose/", "/prix/depose-carrelage-au-m2/": "/prix/depose-carrelage-au-m2/",
+  "/prix/renovation-m2/": "/prix/renovation-maison-m2/", "/prix/pose-faience-salle-de-bains/": "/prix/pose-carrelage-mural-m2/",
+  // prix : assainissement, extérieur
+  "/prix/fosse-septique-vider/": "/prix/vidange-fosse-septique/", "/prix/vidanger-une-fosse-septique/": "/prix/vidange-fosse-septique/",
+  "/prix/installer-fosse-septique/": "/prix/installation-fosse-septique/", "/prix/fosse-septique-4-personnes/": "/prix/fosse-septique/",
+  "/prix/goudronnage-m2/": "/prix/goudron-m2/", "/prix/enrobe-particulier-m2/": "/prix/enrobe-m2/",
+  "/prix/terrassement-maison-100m2/": "/prix/terrassement-m2/", "/prix/pose-cloture/": "/prix/cloture/",
+  "/prix/cloture-grillage/": "/prix/cloture-rigide/", "/prix/pose-grillage-rigide/": "/prix/cloture-rigide/",
+  "/prix/pose-portail-2-battants/": "/prix/pose-portail/", "/prix/portail-alu-avec-pose/": "/prix/pose-portail/",
+  "/prix/store-banne-electrique-avec-pose/": "/prix/store-banne-avec-pose/", "/prix/pergola-avec-pose/": "/prix/pergola/",
+  "/prix/construction-veranda/": "/prix/veranda/", "/prix/veranda-bioclimatique/": "/prix/pergola-bioclimatique/",
+  "/prix/veranda-20m2-habitable/": "/prix/veranda-aluminium-20m2/", "/prix/veranda-rideau-de-20m2/": "/prix/veranda-aluminium-20m2/",
+  "/prix/veranda-gustave-rideau/": "/prix/veranda/", "/prix/veranda-retractable/": "/prix/veranda/",
+  // prix : menuiserie, énergie, bardage
+  "/prix/pose-porte-interieur/": "/prix/pose-porte-interieure/", "/prix/fenetre-pvc-pose-comprise/": "/prix/fenetre-pvc-double-vitrage-avec-pose/",
+  "/prix/pose-fenetres/": "/prix/fenetre-pvc-double-vitrage-avec-pose/", "/prix/porte-garage-electrique-avec-pose/": "/prix/porte-de-garage-avec-pose/",
+  "/prix/porte-pvc-avec-pose/": "/prix/porte-d-entree-avec-pose/", "/prix/porte-blindee-avec-pose/": "/prix/porte-d-entree-avec-pose/",
+  "/prix/volet-bois-avec-pose/": "/prix/volets-roulants-avec-pose/", "/prix/volet-roulant-veranda-exterieur/": "/prix/volets-roulants-avec-pose/",
+  "/prix/climatisation-pour-50-m2/": "/prix/climatisation-pose/", "/prix/pompe-a-chaleur-air-air-pour-80-m2/": "/prix/pompe-a-chaleur-maison-100-m2/",
+  "/prix/pompe-a-chaleur-avec-pose/": "/prix/pompe-a-chaleur-maison-100-m2/", "/prix/pose-panneaux-solaires/": "/prix/pergola-solaire/",
+  "/prix/bardage-exterieur/": "/prix/bardage/", "/prix/bardage-bois-exterieur-m2/": "/prix/bardage-bois-m2/", "/prix/bardage-douglas-m2/": "/prix/bardage-bois-m2/",
+  "/prix/bardage-exterieur-composite/": "/prix/bardage-composite/", "/prix/bardage-cedral-m2/": "/prix/bardage-fibro-ciment-m2/",
+  "/prix/pose-bardage-m2-sans-fourniture/": "/prix/bardage/", "/prix/paysagiste/": "/prix/paysagiste/",
+  // problèmes
+  "/guides/reparation-veranda-autour-de-moi/": "/guides/reparation-veranda/", "/guides/reparation-veranda-ancienne/": "/guides/reparation-veranda/",
+  "/guides/reparation-etancheite-veranda/": "/guides/reparation-veranda/", "/guides/traitement-fosse-septique/": "/guides/reparation-fosse-septique/",
+  "/guides/veranda-rideau-probleme/": "/guides/reparation-veranda/",
+  // aides
+  "/aides/ma-prime-renov-isolation-exterieure/": "/aides/aide-isolation-exterieure/", "/aides/maprimerenov-isolation-exterieure/": "/aides/aide-isolation-exterieure/",
+  "/aides/prime-isolation-exterieure/": "/aides/aide-isolation-exterieure/", "/aides/subventions-isolation-exterieure/": "/aides/aide-isolation-exterieure/",
+  "/aides/aide-ravalement-facade-sans-isolation-exterieur/": "/aides/aide-ravalement-de-facade/",
+  "/aides/pergola-et-permis-de-construire/": "/aides/autorisation-pergola/", "/aides/exemple-declaration-prealable-pergola/": "/aides/autorisation-pergola/",
+  "/aides/veranda-autorisation/": "/aides/permis-de-construire-veranda/", "/aides/nouvelle-loi-sur-les-veranda/": "/aides/permis-de-construire-veranda/",
+  "/aides/reglementation-fosse-septique/": "/aides/fosse-septique-norme/",
+  // blog
+  "/blog/idee-cloture/": "/blog/idee-cloture-jardin/", "/blog/idee-cloture-devant-maison/": "/blog/idee-cloture-jardin/", "/blog/modele-de-cloture-exterieur/": "/blog/idee-cloture-jardin/",
+  "/blog/cloture-pas-cher-a-faire-soi-meme/": "/blog/idee-cloture-jardin/",
+  "/blog/la-pergola-photos/": "/blog/idee-pergola-a-faire-soi-meme/", "/blog/la-veranda-photos/": "/blog/modele-de-veranda/",
+  "/blog/plan-pergola-bois-pdf-gratuit/": "/blog/plan-pergola-bois-gratuit/", "/blog/plan-charpente-bac-acier/": "/blog/plan-charpente/",
+  "/blog/schema-charpente/": "/blog/plan-charpente/", "/blog/plan-facade-et-toiture/": "/blog/plan-charpente/",
+  "/blog/schema-installation-fosse-septique-toutes-eaux/": "/blog/fosse-septique-schema/", "/blog/idee-jardin-paysagiste/": "/blog/photos-paysagiste/", "/blog/plan-paysagiste/": "/blog/photos-paysagiste/",
+  "/blog/idees-extension-maison/": "/blog/plan-extension-maison-20m2/", "/blog/meilleure-isolation-exterieure/": "/blog/isolation-exterieure-soi-meme/",
+};
+for (const [from, into] of Object.entries(MERGE)) if (from === into) delete MERGE[from];
+
 // ---------------------------------------------------------------- étape 2 : fusion des collisions d'URL et des doublons d'intention
 
 const byUrl = new Map();
@@ -264,6 +332,18 @@ for (const g of groups.values()) {
     merged.push({ from: d.url, into: keep.url, reason: "même intention (singulier/pluriel, alu/aluminium, ordre des mots)" });
     byUrl.delete(d.url);
   }
+}
+
+for (const [from, into] of Object.entries(MERGE)) {
+  const a = byUrl.get(from);
+  const b = byUrl.get(into);
+  if (!a) continue;
+  if (!b) continue; // la page cible n'existe pas (rejetée) : la page source reste
+  b.secondary = [...new Set([...b.secondary, a.keyword, ...a.secondary].filter(Boolean))];
+  b.volume += a.volume;
+  b.nbRequetes += a.nbRequetes;
+  merged.push({ from, into, reason: "même intention de recherche (regroupement validé à la main)" });
+  byUrl.delete(from);
 }
 
 let pages = [...byUrl.values()];

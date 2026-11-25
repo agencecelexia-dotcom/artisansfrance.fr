@@ -1,5 +1,6 @@
 import type { Editorial, SourceLink, EditorialSection, Faq } from "./types";
 import { CONTENT_UPDATED } from "@/config/site";
+import { BUILT_EDITORIAL } from "./editorial-build";
 
 // Guides éditoriaux : problèmes, aides, prix. Règles du brief : conseils généraux et sûrs, aucun diagnostic à distance,
 // aucune fourchette de prix sans source datée, sources officielles citées. Textes à relire avant mise en ligne.
@@ -36,7 +37,7 @@ function ed(e: Omit<Editorial, "maj" | "sources"> & { sources?: SourceLink[] }):
   return { maj: CONTENT_UPDATED, sources: [SP, DGCCRF], ...e };
 }
 
-const LIST: Editorial[] = [
+const HAND: Editorial[] = [
   // ------------------------------------------------------------------ problèmes et réparations
   ed({
     url: "/guides/fuite-toiture/",
@@ -360,6 +361,8 @@ const LIST: Editorial[] = [
   }),
 ];
 
+// Les textes écrits à la main priment sur les guides compacts s'ils visent la même URL.
+const LIST: Editorial[] = [...HAND, ...BUILT_EDITORIAL.filter((b) => !HAND.some((h) => h.url === b.url))];
 const BY_URL = new Map(LIST.map((e) => [e.url, e]));
 
 export const hasEditorial = (url: string) => BY_URL.has(url);

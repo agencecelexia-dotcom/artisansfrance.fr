@@ -1,6 +1,6 @@
 import LeadForm, { type TradeOption } from "./LeadForm";
 import Locator from "./Locator";
-import { callbackText } from "@/config/site";
+import { COMPANY, callbackText } from "@/config/site";
 import { TRADES } from "@/content/trades";
 import { cityPages, deptPages, geo, communeOfPage, publishedTrades } from "@/lib/pages";
 import type { LocatorData } from "@/lib/postal";
@@ -24,7 +24,9 @@ interface FormProps {
 
 /** Formulaire de demande avec ses valeurs de configuration (rappel, métiers). */
 export function LeadFormBlock(props: FormProps) {
-  return <LeadForm trades={tradeOptions()} callbackText={callbackText()} {...props} />;
+  // Webhook absent au build : le formulaire propose l'envoi par e-mail plutôt que d'échouer à la dernière étape.
+  const fallbackEmail = !process.env.LEADS_WEBHOOK_URL && process.env.NODE_ENV === "production" ? COMPANY.contactEmail ?? undefined : undefined;
+  return <LeadForm trades={tradeOptions()} callbackText={callbackText()} fallbackEmail={fallbackEmail} {...props} />;
 }
 
 /** Données du Locator d'un métier : codes postaux des villes publiées et départements publiés. */

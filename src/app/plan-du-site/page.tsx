@@ -38,10 +38,10 @@ export default function Page() {
           </section>
         );
       })}
-      {of("prix", "probleme", "aides").length > 0 && (
+      {of("prix", "probleme", "aides", "blog").length > 0 && (
         <>
           <h2>Guides</h2>
-          <LinkList items={of("prix", "probleme", "aides").filter((p) => getEditorial(p.url)).map((p) => ({ href: p.url, label: getEditorial(p.url)!.titre }))} />
+          <LinkList items={of("prix", "probleme", "aides", "blog").filter((p) => getEditorial(p.url)).map((p) => ({ href: p.url, label: getEditorial(p.url)!.titre }))} />
         </>
       )}
       <h2>Mentions et règles</h2>

@@ -5,7 +5,7 @@ import { Container, Hero, Updated } from "@/components/Ui";
 import Faq from "@/components/Faq";
 import ArtisanForm from "@/components/ArtisanForm";
 import { TRADES } from "@/content/trades";
-import { CONTENT_UPDATED, COVERED_DEPARTMENTS } from "@/config/site";
+import { COMPANY, CONTENT_UPDATED, COVERED_DEPARTMENTS } from "@/config/site";
 import { INDEXING_ON } from "@/config/publication";
 import { deptGeo, getPublished, pagesOfType } from "@/lib/pages";
 import { buildMetadata } from "@/lib/seo";
@@ -34,6 +34,7 @@ export default async function Page({ params }: Props) {
   const { metier } = await params;
   const trade = TRADES[metier];
   if (!trade || !getPublished(`/${metier}/`)) notFound();
+  const fallback = !process.env.LEADS_WEBHOOK_URL && process.env.NODE_ENV === "production" ? COMPANY.contactEmail ?? undefined : undefined;
   const covered = COVERED_DEPARTMENTS.map((c) => deptGeo(c)?.nom ?? c);
 
   return (
@@ -46,7 +47,7 @@ export default async function Page({ params }: Props) {
         h1={`${trade.nom} : recevez des demandes de chantiers`}
         lead={`Des particuliers nous confient des chantiers de ${trade.nom.toLowerCase()}. Nous les étudions, puis nous les confions à des artisans sélectionnés de leur secteur.`}
         facts={["Commission uniquement si le chantier est signé", "Aucune promesse de volume ni d'exclusivité", "Contrat d'apport d'affaires signé avant toute transmission"]}
-        aside={<ArtisanForm trades={[{ slug: metier, nom: trade.nom }]} tradeSlug={metier} />}
+        aside={<ArtisanForm trades={[{ slug: metier, nom: trade.nom }]} tradeSlug={metier} fallbackEmail={fallback} />}
       />
       <Container className="py-12">
         <div className="texte max-w-[68ch]">

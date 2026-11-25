@@ -6,12 +6,14 @@ import Link from "next/link";
 interface Props {
   trades: { slug: string; nom: string }[];
   tradeSlug?: string;
+  /** Tant que le webhook n'est pas branché : la candidature part depuis la messagerie du visiteur. */
+  fallbackEmail?: string;
 }
 
 const input = "w-full rounded-ui border border-sable-300 bg-white px-3 py-2.5 text-base text-anthracite";
 
 /** Candidature d'un artisan : envoyée au même webhook que les demandes, avec le type « candidature ». */
-export default function ArtisanForm({ trades, tradeSlug }: Props) {
+export default function ArtisanForm({ trades, tradeSlug, fallbackEmail }: Props) {
   const uid = useId();
   const [data, setData] = useState({ entreprise: "", siren: "", trade: tradeSlug ?? "", departements: "", prenom: "", nom: "", telephone: "", email: "", message: "", accord: false, website: "" });
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -25,6 +27,24 @@ export default function ArtisanForm({ trades, tradeSlug }: Props) {
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
+    if (fallbackEmail) {
+      const missing: Record<string, string> = {};
+      if (!data.entreprise.trim()) missing.entreprise = "Indiquez le nom de l'entreprise.";
+      if (!/^\d{9}$/.test(data.siren.replace(/\s/g, ""))) missing.siren = "Le SIREN comporte 9 chiffres.";
+      if (!data.trade) missing.trade = "Choisissez un métier.";
+      if (!data.departements.trim()) missing.departements = "Indiquez les départements où vous intervenez.";
+      if (!data.prenom.trim() || !data.nom.trim()) missing.nom = "Indiquez votre prénom et votre nom.";
+      if (!data.telephone.trim()) missing.telephone = "Indiquez un numéro de téléphone.";
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(data.email.trim())) missing.email = "Saisissez une adresse e-mail valide.";
+      if (!data.accord) missing.accord = "Cochez la case pour que nous puissions vous recontacter.";
+      setErrors(missing);
+      if (Object.keys(missing).length > 0) return;
+      const body = [`Entreprise : ${data.entreprise}`, `SIREN : ${data.siren}`, `Métier : ${trades.find((t) => t.slug === data.trade)?.nom ?? data.trade}`, `Départements : ${data.departements}`, `Contact : ${data.prenom} ${data.nom}, ${data.telephone}, ${data.email}`, data.message ? `Message : ${data.message}` : ""].filter(Boolean).join("\n");
+      window.location.href = `mailto:${fallbackEmail}?subject=${encodeURIComponent("Candidature artisan : " + data.entreprise)}&body=${encodeURIComponent(body)}`;
+      setState("done");
+      setMessage("Votre messagerie s'est ouverte avec votre candidature : envoyez le message pour que nous la recevions.");
+      return;
+    }
     setState("sending");
     setMessage(null);
     try {

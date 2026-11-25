@@ -1,24 +1,24 @@
 # Nettoyage du plan de pages
 
-Plan d'origine : 2055 pages. Pages retenues : 2009 (dont 7 pages région ajoutées).
+Plan d'origine : 2055 pages. Pages retenues : 1898 (dont 7 pages région ajoutées).
 
-- Rejetées : 20
-- Fusionnées : 33
-- URL renommées : 252
+- Rejetées : 33
+- Fusionnées : 131
+- URL renommées : 246
 
 ## Pages retenues par type et par phase
 
 | Type | Phase 1 | Phase 2 | Phase 3 | Phase 4 | Total |
 |---|---|---|---|---|---|
-| aides | 3 | 9 | 12 | 0 | 24 |
+| aides | 3 | 3 | 7 | 0 | 13 |
 | hub | 17 | 0 | 0 | 0 | 17 |
 | dept | 96 | 384 | 334 | 0 | 814 |
 | devis | 2 | 4 | 24 | 0 | 30 |
-| probleme | 5 | 0 | 3 | 7 | 15 |
-| prix | 36 | 39 | 113 | 0 | 188 |
+| probleme | 5 | 0 | 3 | 5 | 13 |
+| prix | 24 | 21 | 63 | 0 | 108 |
 | ville | 373 | 52 | 91 | 367 | 883 |
 | region | 0 | 7 | 0 | 0 | 7 |
-| blog | 0 | 0 | 0 | 31 | 31 |
+| blog | 0 | 0 | 0 | 13 | 13 |
 
 ## Pages rejetées
 
@@ -28,7 +28,11 @@ Plan d'origine : 2055 pages. Pages retenues : 2009 (dont 7 pages région ajouté
 | /prix/volet-roulant-toiture-veranda-bubendorff-prix/ | volet roulant toiture véranda bubendorff prix | nom propre, marque, concurrent ou requête hors sujet |
 | /prix/yann-couvreur-prix/ | yann couvreur prix | nom propre, marque, concurrent ou requête hors sujet |
 | /prix/cheveux-extension-prix/ | cheveux extension prix | nom propre, marque, concurrent ou requête hors sujet |
+| /prix/prix-extension-cheveu/ | prix extension cheveu | nom propre, marque, concurrent ou requête hors sujet |
 | /prix/extension-de-cils-prix/ | extension de cils prix | nom propre, marque, concurrent ou requête hors sujet |
+| /prix/combien-gagne-un-macon/ | combien gagne un maçon | nom propre, marque, concurrent ou requête hors sujet |
+| /prix/etai-de-macon-prix/ | etai de maçon prix | nom propre, marque, concurrent ou requête hors sujet |
+| /aides/aide-macon/ | aide maçon | nom propre, marque, concurrent ou requête hors sujet |
 | /prix/prix-gazon-synthetique-m2/ | prix gazon synthetique m2 | nom propre, marque, concurrent ou requête hors sujet |
 | /prix/prix-m2-enrobe-colas/ | prix m2 enrobé colas | nom propre, marque, concurrent ou requête hors sujet |
 | /prix/prix-m2-enrobe-daniel-moquet/ | prix m2 enrobé daniel moquet | nom propre, marque, concurrent ou requête hors sujet |
@@ -36,14 +40,23 @@ Plan d'origine : 2055 pages. Pages retenues : 2009 (dont 7 pages région ajouté
 | /prix/daniel-moquet-tarif-cloture/ | daniel moquet tarif clôture | nom propre, marque, concurrent ou requête hors sujet |
 | /prix/prix-m2-gazon-paysagiste/ | prix m2 gazon paysagiste | nom propre, marque, concurrent ou requête hors sujet |
 | /prix/prix-gazon-en-rouleau-avec-pose/ | prix gazon en rouleau avec pose | nom propre, marque, concurrent ou requête hors sujet |
+| /prix/combien-gagne-un-paysagiste/ | combien gagne un paysagiste | nom propre, marque, concurrent ou requête hors sujet |
+| /prix/veranda-gustave-rideau-prix/ | véranda gustave rideau prix | nom propre, marque, concurrent ou requête hors sujet |
 | /prix/veranda-akena-prix/ | véranda akena prix | nom propre, marque, concurrent ou requête hors sujet |
+| /prix/bardage-canexel-prix-au-m2/ | bardage canexel prix au m2 | nom propre, marque, concurrent ou requête hors sujet |
+| /prix/prix-d-une-veranda-rideau-de-20m2/ | prix d une véranda rideau de 20m2 | nom propre, marque, concurrent ou requête hors sujet |
+| /prix/prix-piscine-waterair-avec-pose/ | prix piscine waterair avec pose | nom propre, marque, concurrent ou requête hors sujet |
 | /devis/devis-travaux-ninja/ | devis travaux ninja | nom propre, marque, concurrent ou requête hors sujet |
 | /devis/devis-travaux-habitatpresto/ | devis travaux habitatpresto | nom propre, marque, concurrent ou requête hors sujet |
 | /devis/devis-transporteur/ | devis transporteur | nom propre, marque, concurrent ou requête hors sujet |
 | /devis/devis-electricite-et-gaz/ | devis electricite et gaz | nom propre, marque, concurrent ou requête hors sujet |
+| /guides/veranda-rideau-probleme/ | véranda rideau problème | nom propre, marque, concurrent ou requête hors sujet |
 | /blog/avis-sur-la-pergola-sushi/ | avis sur la pergola sushi | nom propre, marque, concurrent ou requête hors sujet |
+| /blog/cloture-et-jardin-avis/ | clôture et jardin avis | nom propre, marque, concurrent ou requête hors sujet |
+| /blog/vie-veranda-avis/ | vie & véranda avis | nom propre, marque, concurrent ou requête hors sujet |
 | /blog/vs-code-extension/ | vs code extension | nom propre, marque, concurrent ou requête hors sujet |
 | /blog/yann-couvreur-avis/ | yann couvreur avis | nom propre, marque, concurrent ou requête hors sujet |
+| /blog/isolation-exterieure-avis/ | isolation extérieure avis | nom propre, marque, concurrent ou requête hors sujet |
 
 ## Pages locales conservées, mot-clé parasite écarté
 
@@ -114,6 +127,104 @@ Plan d'origine : 2055 pages. Pages retenues : 2009 (dont 7 pages région ajouté
 | /prix/veranda-20m2-alu/ | /prix/veranda-aluminium-20m2/ | même intention (singulier/pluriel, alu/aluminium, ordre des mots) |
 | /prix/portail-aluminium-avec-pose/ | /prix/portail-alu-avec-pose/ | même intention (singulier/pluriel, alu/aluminium, ordre des mots) |
 | /prix/pose-panneau-solaire/ | /prix/pose-panneaux-solaires/ | même intention (singulier/pluriel, alu/aluminium, ordre des mots) |
+| /prix/toiture-m2-tuile/ | /prix/tuile-m2/ | même intention de recherche (regroupement validé à la main) |
+| /prix/pose-tuile-au-m2-sans-fourniture/ | /prix/pose-de-tuiles-au-m2/ | même intention de recherche (regroupement validé à la main) |
+| /prix/ardoise-m2/ | /prix/toiture-ardoises-au-m2/ | même intention de recherche (regroupement validé à la main) |
+| /prix/pose-ardoise-m2/ | /prix/toiture-ardoises-au-m2/ | même intention de recherche (regroupement validé à la main) |
+| /prix/charpente-et-toiture-100m2/ | /prix/charpente-m2/ | même intention de recherche (regroupement validé à la main) |
+| /prix/charpente-couverture-m2/ | /prix/charpente-m2/ | même intention de recherche (regroupement validé à la main) |
+| /prix/ferme-charpente/ | /prix/charpente-fermette/ | même intention de recherche (regroupement validé à la main) |
+| /prix/pose-gouttiere-alu/ | /prix/pose-gouttiere/ | même intention de recherche (regroupement validé à la main) |
+| /prix/renovation-toiture-m2/ | /prix/toiture-m2/ | même intention de recherche (regroupement validé à la main) |
+| /prix/store-toiture-veranda-exterieur/ | /prix/store-veranda-exterieur-electrique/ | même intention de recherche (regroupement validé à la main) |
+| /prix/plaque-isolante-pour-toiture-veranda/ | /prix/changer-toit-veranda/ | même intention de recherche (regroupement validé à la main) |
+| /prix/toit-veranda-polycarbonate/ | /prix/changer-toit-veranda/ | même intention de recherche (regroupement validé à la main) |
+| /prix/peinture-murs-m2/ | /prix/peinture-murale-m2/ | même intention de recherche (regroupement validé à la main) |
+| /prix/pour-peindre-un-mur-m2/ | /prix/peinture-murale-m2/ | même intention de recherche (regroupement validé à la main) |
+| /prix/pour-peindre-une-facade-m2/ | /prix/peinture-facade-m2/ | même intention de recherche (regroupement validé à la main) |
+| /prix/ravalement-m2/ | /prix/ravalement-de-facades/ | même intention de recherche (regroupement validé à la main) |
+| /prix/ravalement-maison/ | /prix/ravalement-de-facades/ | même intention de recherche (regroupement validé à la main) |
+| /prix/crepis-m2/ | /prix/enduit-m2/ | même intention de recherche (regroupement validé à la main) |
+| /prix/isolation-exterieure-crepi-m2/ | /prix/isolation-exterieure/ | même intention de recherche (regroupement validé à la main) |
+| /prix/isolation-par-l-exterieur-m2/ | /prix/isolation-exterieure/ | même intention de recherche (regroupement validé à la main) |
+| /prix/escalier-en-bois-avec-pose/ | /prix/escalier-avec-pose/ | même intention de recherche (regroupement validé à la main) |
+| /prix/escalier-sur-mesure-avec-pose/ | /prix/escalier-avec-pose/ | même intention de recherche (regroupement validé à la main) |
+| /prix/surelevation/ | /prix/surelevation-maison/ | même intention de recherche (regroupement validé à la main) |
+| /prix/beton-lave-m2/ | /prix/beton-desactive-m2/ | même intention de recherche (regroupement validé à la main) |
+| /prix/chape-m2/ | /prix/chape-liquide-m2/ | même intention de recherche (regroupement validé à la main) |
+| /prix/beton-m2/ | /prix/dalle-beton-m2/ | même intention de recherche (regroupement validé à la main) |
+| /prix/extension-veranda-m2/ | /prix/construction-veranda/ | même intention de recherche (regroupement validé à la main) |
+| /prix/placostil-au-m2/ | /prix/placo-m2/ | même intention de recherche (regroupement validé à la main) |
+| /prix/placostyle-m2/ | /prix/placo-m2/ | même intention de recherche (regroupement validé à la main) |
+| /prix/pose-m2-placo/ | /prix/placo-m2/ | même intention de recherche (regroupement validé à la main) |
+| /prix/pose-placoplatre/ | /prix/placo-m2/ | même intention de recherche (regroupement validé à la main) |
+| /prix/pose-m2-parquet/ | /prix/parquet-m2/ | même intention de recherche (regroupement validé à la main) |
+| /prix/pose-parquet-flottant/ | /prix/parquet-flottant-m2/ | même intention de recherche (regroupement validé à la main) |
+| /prix/carrelage-m2/ | /prix/carrelage-m2-pose/ | même intention de recherche (regroupement validé à la main) |
+| /prix/renovation-m2/ | /prix/renovation-maison-m2/ | même intention de recherche (regroupement validé à la main) |
+| /prix/pose-faience-salle-de-bains/ | /prix/pose-carrelage-mural-m2/ | même intention de recherche (regroupement validé à la main) |
+| /prix/fosse-septique-vider/ | /prix/vidange-fosse-septique/ | même intention de recherche (regroupement validé à la main) |
+| /prix/vidanger-une-fosse-septique/ | /prix/vidange-fosse-septique/ | même intention de recherche (regroupement validé à la main) |
+| /prix/installer-fosse-septique/ | /prix/installation-fosse-septique/ | même intention de recherche (regroupement validé à la main) |
+| /prix/fosse-septique-4-personnes/ | /prix/fosse-septique/ | même intention de recherche (regroupement validé à la main) |
+| /prix/goudronnage-m2/ | /prix/goudron-m2/ | même intention de recherche (regroupement validé à la main) |
+| /prix/enrobe-particulier-m2/ | /prix/enrobe-m2/ | même intention de recherche (regroupement validé à la main) |
+| /prix/terrassement-maison-100m2/ | /prix/terrassement-m2/ | même intention de recherche (regroupement validé à la main) |
+| /prix/pose-cloture/ | /prix/cloture/ | même intention de recherche (regroupement validé à la main) |
+| /prix/cloture-grillage/ | /prix/cloture-rigide/ | même intention de recherche (regroupement validé à la main) |
+| /prix/pose-grillage-rigide/ | /prix/cloture-rigide/ | même intention de recherche (regroupement validé à la main) |
+| /prix/pose-portail-2-battants/ | /prix/pose-portail/ | même intention de recherche (regroupement validé à la main) |
+| /prix/portail-alu-avec-pose/ | /prix/pose-portail/ | même intention de recherche (regroupement validé à la main) |
+| /prix/store-banne-electrique-avec-pose/ | /prix/store-banne-avec-pose/ | même intention de recherche (regroupement validé à la main) |
+| /prix/pergola-avec-pose/ | /prix/pergola/ | même intention de recherche (regroupement validé à la main) |
+| /prix/construction-veranda/ | /prix/veranda/ | même intention de recherche (regroupement validé à la main) |
+| /prix/veranda-bioclimatique/ | /prix/pergola-bioclimatique/ | même intention de recherche (regroupement validé à la main) |
+| /prix/veranda-20m2-habitable/ | /prix/veranda-aluminium-20m2/ | même intention de recherche (regroupement validé à la main) |
+| /prix/veranda-retractable/ | /prix/veranda/ | même intention de recherche (regroupement validé à la main) |
+| /prix/pose-porte-interieur/ | /prix/pose-porte-interieure/ | même intention de recherche (regroupement validé à la main) |
+| /prix/fenetre-pvc-pose-comprise/ | /prix/fenetre-pvc-double-vitrage-avec-pose/ | même intention de recherche (regroupement validé à la main) |
+| /prix/pose-fenetres/ | /prix/fenetre-pvc-double-vitrage-avec-pose/ | même intention de recherche (regroupement validé à la main) |
+| /prix/porte-garage-electrique-avec-pose/ | /prix/porte-de-garage-avec-pose/ | même intention de recherche (regroupement validé à la main) |
+| /prix/porte-pvc-avec-pose/ | /prix/porte-d-entree-avec-pose/ | même intention de recherche (regroupement validé à la main) |
+| /prix/porte-blindee-avec-pose/ | /prix/porte-d-entree-avec-pose/ | même intention de recherche (regroupement validé à la main) |
+| /prix/volet-bois-avec-pose/ | /prix/volets-roulants-avec-pose/ | même intention de recherche (regroupement validé à la main) |
+| /prix/volet-roulant-veranda-exterieur/ | /prix/volets-roulants-avec-pose/ | même intention de recherche (regroupement validé à la main) |
+| /prix/climatisation-pour-50-m2/ | /prix/climatisation-pose/ | même intention de recherche (regroupement validé à la main) |
+| /prix/pompe-a-chaleur-air-air-pour-80-m2/ | /prix/pompe-a-chaleur-maison-100-m2/ | même intention de recherche (regroupement validé à la main) |
+| /prix/pompe-a-chaleur-avec-pose/ | /prix/pompe-a-chaleur-maison-100-m2/ | même intention de recherche (regroupement validé à la main) |
+| /prix/pose-panneaux-solaires/ | /prix/pergola-solaire/ | même intention de recherche (regroupement validé à la main) |
+| /prix/bardage-exterieur/ | /prix/bardage/ | même intention de recherche (regroupement validé à la main) |
+| /prix/bardage-bois-exterieur-m2/ | /prix/bardage-bois-m2/ | même intention de recherche (regroupement validé à la main) |
+| /prix/bardage-douglas-m2/ | /prix/bardage-bois-m2/ | même intention de recherche (regroupement validé à la main) |
+| /prix/bardage-exterieur-composite/ | /prix/bardage-composite/ | même intention de recherche (regroupement validé à la main) |
+| /prix/bardage-cedral-m2/ | /prix/bardage-fibro-ciment-m2/ | même intention de recherche (regroupement validé à la main) |
+| /prix/pose-bardage-m2-sans-fourniture/ | /prix/bardage/ | même intention de recherche (regroupement validé à la main) |
+| /guides/traitement-fosse-septique/ | /guides/reparation-fosse-septique/ | même intention de recherche (regroupement validé à la main) |
+| /aides/ma-prime-renov-isolation-exterieure/ | /aides/aide-isolation-exterieure/ | même intention de recherche (regroupement validé à la main) |
+| /aides/maprimerenov-isolation-exterieure/ | /aides/aide-isolation-exterieure/ | même intention de recherche (regroupement validé à la main) |
+| /aides/prime-isolation-exterieure/ | /aides/aide-isolation-exterieure/ | même intention de recherche (regroupement validé à la main) |
+| /aides/subventions-isolation-exterieure/ | /aides/aide-isolation-exterieure/ | même intention de recherche (regroupement validé à la main) |
+| /aides/aide-ravalement-facade-sans-isolation-exterieur/ | /aides/aide-ravalement-de-facade/ | même intention de recherche (regroupement validé à la main) |
+| /aides/pergola-et-permis-de-construire/ | /aides/autorisation-pergola/ | même intention de recherche (regroupement validé à la main) |
+| /aides/exemple-declaration-prealable-pergola/ | /aides/autorisation-pergola/ | même intention de recherche (regroupement validé à la main) |
+| /aides/veranda-autorisation/ | /aides/permis-de-construire-veranda/ | même intention de recherche (regroupement validé à la main) |
+| /aides/nouvelle-loi-sur-les-veranda/ | /aides/permis-de-construire-veranda/ | même intention de recherche (regroupement validé à la main) |
+| /aides/reglementation-fosse-septique/ | /aides/fosse-septique-norme/ | même intention de recherche (regroupement validé à la main) |
+| /blog/idee-cloture/ | /blog/idee-cloture-jardin/ | même intention de recherche (regroupement validé à la main) |
+| /blog/idee-cloture-devant-maison/ | /blog/idee-cloture-jardin/ | même intention de recherche (regroupement validé à la main) |
+| /blog/modele-de-cloture-exterieur/ | /blog/idee-cloture-jardin/ | même intention de recherche (regroupement validé à la main) |
+| /blog/cloture-pas-cher-a-faire-soi-meme/ | /blog/idee-cloture-jardin/ | même intention de recherche (regroupement validé à la main) |
+| /blog/la-pergola-photos/ | /blog/idee-pergola-a-faire-soi-meme/ | même intention de recherche (regroupement validé à la main) |
+| /blog/la-veranda-photos/ | /blog/modele-de-veranda/ | même intention de recherche (regroupement validé à la main) |
+| /blog/plan-pergola-bois-pdf-gratuit/ | /blog/plan-pergola-bois-gratuit/ | même intention de recherche (regroupement validé à la main) |
+| /blog/plan-charpente-bac-acier/ | /blog/plan-charpente/ | même intention de recherche (regroupement validé à la main) |
+| /blog/schema-charpente/ | /blog/plan-charpente/ | même intention de recherche (regroupement validé à la main) |
+| /blog/plan-facade-et-toiture/ | /blog/plan-charpente/ | même intention de recherche (regroupement validé à la main) |
+| /blog/schema-installation-fosse-septique-toutes-eaux/ | /blog/fosse-septique-schema/ | même intention de recherche (regroupement validé à la main) |
+| /blog/idee-jardin-paysagiste/ | /blog/photos-paysagiste/ | même intention de recherche (regroupement validé à la main) |
+| /blog/plan-paysagiste/ | /blog/photos-paysagiste/ | même intention de recherche (regroupement validé à la main) |
+| /blog/idees-extension-maison/ | /blog/plan-extension-maison-20m2/ | même intention de recherche (regroupement validé à la main) |
+| /blog/meilleure-isolation-exterieure/ | /blog/isolation-exterieure-soi-meme/ | même intention de recherche (regroupement validé à la main) |
 
 ## URL renommées (nettoyage des slugs)
 
@@ -174,7 +285,6 @@ Plan d'origine : 2055 pages. Pages retenues : 2009 (dont 7 pages région ajouté
 | /prix/prix-surelevation-maison/ | /prix/surelevation-maison/ |
 | /prix/prix-extension-bois-20-m2/ | /prix/extension-bois-20-m2/ |
 | /prix/prix-m2-isolation-exterieure-crepi/ | /prix/isolation-exterieure-crepi-m2/ |
-| /prix/prix-extension-cheveu/ | /prix/extension-cheveu/ |
 | /prix/chape-prix-m2/ | /prix/chape-m2/ |
 | /prix/beton-prix-m2/ | /prix/beton-m2/ |
 | /prix/prix-au-m2-pour-peindre-une-facade/ | /prix/pour-peindre-une-facade-m2/ |
@@ -201,7 +311,6 @@ Plan d'origine : 2055 pages. Pages retenues : 2009 (dont 7 pages région ajouté
 | /prix/prix-pose-ipn-mur-porteur/ | /prix/pose-ipn-mur-porteur/ |
 | /prix/prix-d-un-escalier-en-bois-avec-pose/ | /prix/escalier-en-bois-avec-pose/ |
 | /prix/prix-surelevation/ | /prix/surelevation/ |
-| /prix/etai-de-macon-prix/ | /prix/etai-de-macon/ |
 | /devis/devis-isolation-exterieure/ | /devis/isolation-exterieure/ |
 | /devis/maconnerie-devis/ | /devis/macon/ |
 | /devis/devis-macon/ | /devis/macon/ |
@@ -301,20 +410,16 @@ Plan d'origine : 2055 pages. Pages retenues : 2009 (dont 7 pages région ajouté
 | /prix/bardage-cedral-prix-m2/ | /prix/bardage-cedral-m2/ |
 | /prix/prix-veranda-20m2-habitable/ | /prix/veranda-20m2-habitable/ |
 | /prix/veranda-avec-muret-prix/ | /prix/veranda-avec-muret/ |
-| /prix/veranda-gustave-rideau-prix/ | /prix/veranda-gustave-rideau/ |
 | /prix/prix-terrassement-maison-100m2/ | /prix/terrassement-maison-100m2/ |
 | /prix/baie-vitree-prix-pose/ | /prix/baie-vitree-pose/ |
 | /prix/pose-porte-interieur-prix/ | /prix/pose-porte-interieur/ |
-| /prix/bardage-canexel-prix-au-m2/ | /prix/bardage-canexel-au-m2/ |
 | /prix/veranda-retractable-prix/ | /prix/veranda-retractable/ |
 | /prix/prix-veranda-victorienne/ | /prix/veranda-victorienne/ |
-| /prix/prix-d-une-veranda-rideau-de-20m2/ | /prix/veranda-rideau-de-20m2/ |
 | /prix/prix-pose-terrasse-sur-plot/ | /prix/pose-terrasse-sur-plot/ |
 | /prix/prix-pose-bardage-m2-sans-fourniture/ | /prix/pose-bardage-m2-sans-fourniture/ |
 | /prix/paysagiste-tarif-horaire/ | /prix/paysagiste-horaire/ |
 | /prix/prix-pose-panneaux-solaires/ | /prix/pose-panneaux-solaires/ |
 | /prix/prix-pose-panneau-solaire/ | /prix/pose-panneau-solaire/ |
-| /prix/prix-piscine-waterair-avec-pose/ | /prix/piscine-waterair-avec-pose/ |
 | /prix/prix-pose-prise-electrique-renovation/ | /prix/pose-prise-electrique-renovation/ |
 | /prix/prix-porte-pvc-avec-pose/ | /prix/porte-pvc-avec-pose/ |
 | /prix/prix-volet-bois-avec-pose/ | /prix/volet-bois-avec-pose/ |

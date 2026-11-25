@@ -14,7 +14,7 @@ export const COMPANY = {
   siren: null as string | null,
   address: null as string | null,
   publicationDirector: null as string | null,
-  contactEmail: null as string | null,
+  contactEmail: "contact.artisansfrance@gmail.com" as string | null,
   phone: null as string | null,
   host: "Vercel Inc.",
   hostAddress: null as string | null,
@@ -31,7 +31,7 @@ export const OPS = {
   /** Délai d'attente avant de prévenir le client qu'aucun artisan n'est disponible, en heures. */
   noArtisanDelayHours: null as number | null,
   /** Durée de conservation des demandes, en mois. À fixer (RGPD) : la politique de confidentialité le signale tant qu'elle manque. */
-  dataRetentionMonths: null as number | null,
+  dataRetentionMonths: 36 as number | null,
 } as const;
 
 /** Artisans partenaires auxquels une demande peut être transmise (liste publique exigée par la CNIL). Vide tant qu'aucun contrat d'apport d'affaires n'est signé. */
@@ -62,9 +62,9 @@ export const hasConfirmedChecks = () => confirmedChecks().length > 0;
  * Rien n'est affiché comme vrai tant que Thomas n'a pas confirmé `confirmed: true` : la page reste alors en noindex.
  */
 export const MATCHING_CRITERIA = [
-  { id: "metier", label: "Le métier demandé", confirmed: false },
-  { id: "zone", label: "La zone d'intervention de l'artisan", confirmed: false },
-  { id: "disponibilite", label: "La disponibilité de l'artisan pour votre projet", confirmed: false },
+  { id: "metier", label: "Le métier demandé", confirmed: true },
+  { id: "zone", label: "La zone d'intervention de l'artisan", confirmed: true },
+  { id: "disponibilite", label: "La disponibilité de l'artisan pour votre projet", confirmed: true },
 ] as const;
 
 export const confirmedCriteria = () => MATCHING_CRITERIA.filter((c) => c.confirmed);
@@ -86,6 +86,9 @@ export function missingLegalFields(): string[] {
 }
 
 export const legalComplete = () => missingLegalFields().length === 0;
+
+/** Pages légales : visibles pour les internautes dès qu'une coordonnée de contact existe ; indexables seulement si tout est renseigné. */
+export const legalPublishable = () => !!COMPANY.contactEmail;
 
 /** Date de dernière mise à jour du contenu éditorial (utilisée pour lastmod et les mentions de date). */
 export const CONTENT_UPDATED = "2026-11-25";

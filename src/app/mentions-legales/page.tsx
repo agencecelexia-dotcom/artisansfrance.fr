@@ -1,5 +1,5 @@
 import TextPage, { Missing, textMetadata } from "@/components/TextPage";
-import { COMPANY, SITE, legalComplete } from "@/config/site";
+import { COMPANY, SITE, legalComplete, missingLegalFields } from "@/config/site";
 
 const DESC = "Éditeur, directeur de la publication, hébergeur et informations légales d'Artisans France.";
 
@@ -13,25 +13,26 @@ export default function Page() {
         {SITE.name} est un service édité par <strong>{COMPANY.legalName}</strong>, société par actions simplifiée unipersonnelle.
       </p>
       <ul>
-        <li>SIREN : {COMPANY.siren ?? <Missing label="SIREN" />}</li>
-        <li>Siège social : {COMPANY.address ?? <Missing label="adresse du siège" />}</li>
-        <li>Directeur de la publication : {COMPANY.publicationDirector ?? <Missing label="directeur de la publication" />}</li>
-        <li>
-          Contact : {COMPANY.contactEmail ? <a href={`mailto:${COMPANY.contactEmail}`}>{COMPANY.contactEmail}</a> : <Missing label="e-mail de contact" />}
-          {COMPANY.phone ? ` · ${COMPANY.phone}` : ""}
-        </li>
+        {COMPANY.siren && <li>SIREN : {COMPANY.siren}</li>}
+        {COMPANY.address && <li>Siège social : {COMPANY.address}</li>}
+        {COMPANY.publicationDirector && <li>Directeur de la publication : {COMPANY.publicationDirector}</li>}
+        {(COMPANY.contactEmail || COMPANY.phone) && (
+          <li>
+            Contact : {COMPANY.contactEmail ? <a href={`mailto:${COMPANY.contactEmail}`}>{COMPANY.contactEmail}</a> : null}
+            {COMPANY.phone ? ` · ${COMPANY.phone}` : ""}
+          </li>
+        )}
+        {missingLegalFields().length > 0 && process.env.NODE_ENV !== "production" && (
+          <li>
+            <Missing label={missingLegalFields().join(", ")} />
+          </li>
+        )}
       </ul>
 
       <h2>Hébergeur</h2>
       <p>
         {COMPANY.host}
         {COMPANY.hostAddress ? `, ${COMPANY.hostAddress}` : null}
-        {!COMPANY.hostAddress && (
-          <>
-            {" "}
-            <Missing label="adresse de l'hébergeur" />
-          </>
-        )}
       </p>
 
       <h2>Nature du service</h2>

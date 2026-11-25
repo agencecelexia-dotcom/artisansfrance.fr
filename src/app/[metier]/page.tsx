@@ -38,12 +38,14 @@ export default async function HubPage({ params }: Props) {
   if (!page || !trade) notFound();
 
   const depts = deptPages(metier);
-  const villes = cityPages(metier).slice(0, 15);
+  const toutesVilles = cityPages(metier);
+  const villes = toutesVilles.slice(0, 15);
   const regions = regionPages(metier);
-  const guides = guidesOf(metier, ["probleme", "aides", "prix"]);
+  const guides = guidesOf(metier, ["probleme", "aides", "prix", "blog"]);
   const devis = guidesOf(metier, ["devis"]);
   const grouped = groupByRegion(depts);
   const nom = trade.nom;
+  const lowerNom = nom.toLowerCase();
 
   return (
     <>
@@ -151,6 +153,13 @@ export default async function HubPage({ params }: Props) {
             <SectionTitle>Les villes les plus recherchées</SectionTitle>
             <LinkList columns items={villes.map((v) => ({ href: v.url, label: `${nom} à ${v.ville}`, note: v.volume > 0 ? `(${nf.format(v.volume)} recherches par mois)` : undefined }))} />
           </>
+        )}
+
+        {toutesVilles.length > 15 && (
+          <details className="mt-8 rounded-ui border border-sable-300 p-4">
+            <summary className="cursor-pointer font-display text-lg font-bold text-ardoise-800">Toutes les villes de {lowerNom} ({toutesVilles.length})</summary>
+            <LinkList columns items={[...toutesVilles].sort((a, b) => (a.ville ?? "").localeCompare(b.ville ?? "", "fr")).map((v) => ({ href: v.url, label: `${nom} à ${v.ville}` }))} />
+          </details>
         )}
 
         <ArtisanCall trade={metier} tradeNom={nom} />

@@ -22,11 +22,22 @@ export default function EditorialView({ url }: { url: string }) {
   const content = getEditorial(url);
   if (!page || !content || !page.trade) notFound();
   const trade = TRADES[page.trade];
-  const top = deptPages(page.trade)
-    .filter((p) => p.volume > 0)
-    .sort((a, b) => b.volume - a.volume)
-    .slice(0, 10);
-  const liens = (content.liens ?? []).map((u) => ({ u, page: getPublished(u) })).filter((x) => x.page);
+  // Départements proposés : un sous-ensemble des plus recherchés, différent d'une page à l'autre selon l'URL.
+  const seed = [...url].reduce((a, c) => (a * 31 + c.charCodeAt(0)) >>> 0, 7);
+  const pool = deptPages(page.trade).filter((p) => p.volume > 0).sort((a, b) => b.volume - a.volume).slice(0, 24);
+  const top = pool.map((p, i) => ({ p, k: (seed ^ (i * 2654435761)) >>> 0 })).sort((a, b) => a.k - b.k).slice(0, 6).map((x) => x.p);
+  const explicit = (content.liens ?? []).map((u) => ({ u, page: getPublished(u) })).filter((x) => x.page);
+  // Maillage : liens choisis à la main, puis les trois pages suivantes du même métier dans l'ordre alphabétique (cyclique),
+  // ce qui garantit à chaque guide au moins trois liens entrants, puis les plus recherchés pour compléter.
+  const all = guidesOf(page.trade, ["prix", "probleme", "aides", "blog"]).filter((g) => getEditorial(g.url));
+  const ring = [...all].sort((a, b) => a.url.localeCompare(b.url));
+  const at = ring.findIndex((g) => g.url === url);
+  const cyc = at >= 0 ? [1, 2, 3].map((n) => ring[(at + n) % ring.length]).filter((g) => g && g.url !== url) : [];
+  const auto = [...cyc, ...all]
+    .filter((g, i, arr) => g.url !== url && !explicit.some((e) => e.u === g.url) && arr.findIndex((x) => x.url === g.url) === i)
+    .slice(0, Math.max(3, 6 - explicit.length))
+    .map((g) => ({ u: g.url, page: g }));
+  const liens = [...explicit, ...auto];
   const devis = guidesOf(page.trade, ["devis"]).slice(0, 3);
 
   return (
@@ -38,7 +49,7 @@ export default function EditorialView({ url }: { url: string }) {
         ]}
         h1={content.titre}
         lead={content.reponse}
-        facts={heroFacts().slice(0, 2)}
+        facts={heroFacts().slice(0, 1)}
         aside={<LeadFormBlock tradeSlug={page.trade} keyword={page.keyword ?? undefined} />}
       />
 

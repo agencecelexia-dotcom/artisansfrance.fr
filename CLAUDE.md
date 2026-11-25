@@ -11,7 +11,7 @@ AGENTS.md rappelle que Next.js 16 diffère de ce qu'on connaît : lire `node_mod
 ```bash
 npm run dev            # développement (http://localhost:3000)
 npm run build          # build de production (seulement les pages des vagues publiées)
-PREVIEW_ALL=1 INDEXING=on npm run build   # build de TOUT le plan, pour auditer
+npm run build && npm run qa:gate && npm run build   # build complet puis porte qualité
 npm run qa             # audit du HTML généré -> reports/audit-site.md
 npm run typecheck && npm run lint
 npm run data           # régénère src/data/*.json (pages, géo, données locales) ; ~10 min, réseau requis
@@ -51,21 +51,25 @@ src/app/api/{demande,candidature,evenement}   routes serveur -> LEADS_WEBHOOK_UR
 
 URLs : métier en premier, slash final (`/couvreur/77-seine-et-marne/`, `/couvreur/33-gironde/bordeaux/`, `/prix/nettoyage-toiture/`, `/devis/toiture/`, `/guides/fuite-toiture/`, `/aides/aide-refaire-toiture/`).
 
-## Publication : trois verrous (plan §3.3)
+## Publication (état au 25/11/2026 : tout est publié)
 
-1. **Vague** (`PUBLISHED_WAVES` dans `publication.ts`) : une page hors vague n'existe pas (404). Vagues = `phase.lot` de `pages.json`, 100 pages par lot. Seule la vague `1.1` est publiée par défaut ; la phase 1 dépasse 500 pages, donc chaque lot suivant se publie après relecture (arrêt dur du skill seo-programmatic).
-2. **Porte qualité** (`robotsFor()` dans `pages.ts`) : page locale sans recherche et sans artisan couvert → noindex ; page locale avec moins de 3 blocs de données réelles → noindex.
-3. **Indexation globale** : `INDEXING=on` sur l'environnement de production. Sans elle, toutes les pages sont en noindex et `robots.txt` interdit tout le site. À activer après relecture des textes et complétion des pages légales.
+1. **Vagues** : `PUBLISHED_WAVES = ["*"]` dans `publication.ts` publie toutes les vagues du plan (décision explicite de Thomas). Pour revenir à un déploiement progressif, lister les lots (`"1.1"`, `"1.2"`…).
+2. **Porte qualité** (`robotsFor()` dans `pages.ts`) : `npm run qa:gate` (après un build) écrit `src/data/quality.json` : toute page sous 30 % de contenu propre (face aux pages du même gabarit) ou sous 300 mots passe en noindex et sort du sitemap. Ensuite : rebuild. À relancer après toute modification de contenu ou de gabarit. Une page locale sans recherche et sans artisan couvert, ou avec moins de 3 blocs de données réelles, est aussi en noindex.
+3. **Indexation globale** : active par défaut ; `INDEXING=off` met tout le site en noindex et ferme `robots.txt` (préproduction).
 
-Un guide (prix, problème, aides) n'existe que s'il a un texte dans `editorial.ts`. Le build vérifie seulement ce qui est rédigé.
+Un guide (prix, problème, aides, blog) n'existe que s'il est rédigé : `src/content/editorial.ts` (textes à la main) ou `src/content/specs/*` (guides compacts assemblés par `editorial-build.ts`). Les pages devis utilisent `src/content/devis-notes.ts`. Les guides de prix n'affichent jamais de montant (aucune source) : ils expliquent les facteurs de prix.
+
+Le plan CSV n'est pas publié tel quel : `scripts/build-pages.mjs` retire les marques et noms propres, fusionne les doublons d'intention (table `MERGE`, `DEVIS_CANONICAL`), nettoie les slugs et rapporte tout dans `reports/`.
+
+Formulaires : tant que `LEADS_WEBHOOK_URL` n'est pas défini au build, les formulaires proposent l'envoi par e-mail (messagerie du visiteur, adresse `COMPANY.contactEmail`) ; une fois défini, ils postent sur `/api/demande` et `/api/candidature`.
 
 ## Variables d'environnement
 
-`LEADS_WEBHOOK_URL` (obligatoire en production : sans lui, `/api/demande` renvoie une erreur honnête, jamais un faux succès), `LEADS_WEBHOOK_SECRET`, `INDEXING=on`, `PREVIEW_ALL=1` (préproduction), `INDEXNOW_KEY`, `GOOGLE_SITE_VERIFICATION`, `BING_SITE_VERIFICATION`.
+`LEADS_WEBHOOK_URL` (à définir AVANT le build : sans lui, `/api/demande` renvoie une erreur honnête et les formulaires basculent sur l'e-mail), `LEADS_WEBHOOK_SECRET`, `INDEXING=off` (préproduction), `PREVIEW_ALL=1`, `INDEXNOW_KEY`, `GOOGLE_SITE_VERIFICATION`, `BING_SITE_VERIFICATION`.
 
 ## Décisions ouvertes (à demander à Thomas, jamais à deviner)
 
-SIREN, adresse, directeur de la publication, e-mail, adresse de l'hébergeur (`COMPANY`) ; délai de rappel, nombre d'artisans par demande, durée de conservation des données (`OPS`) ; vérifications réellement faites sur les artisans (`SELECTION_CHECKS`) et critères de mise en relation (`MATCHING_CRITERIA`) ; départements couverts (`COVERED_DEPARTMENTS`) ; liste des partenaires (`PARTNERS`) ; médiateur de la consommation ; URL du webhook ; téléphone ; sources de prix ; relecture des textes (avocat de Celexia pour le cadre légal).
+SIREN, adresse du siège, directeur de la publication, adresse de l'hébergeur (`COMPANY`) ; délai de rappel et nombre d'artisans par demande (`OPS`) ; durée de conservation (36 mois posés par défaut : à valider) ; vérifications réellement faites sur les artisans (`SELECTION_CHECKS`, toutes `false`) ; départements couverts (`COVERED_DEPARTMENTS`) ; liste des partenaires (`PARTNERS`) ; médiateur de la consommation ; URL du webhook ; téléphone ; sources de prix ; relecture des textes (avocat de Celexia pour le cadre légal).
 
 ## Données et honnêteté
 

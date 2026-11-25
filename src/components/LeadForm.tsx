@@ -21,6 +21,8 @@ interface Props {
   keyword?: string;
   /** Texte « qui vous rappelle et quand », fourni par la configuration. */
   callbackText: string;
+  /** Tant que le webhook n'est pas branché : adresse où le visiteur envoie sa demande depuis sa messagerie. */
+  fallbackEmail?: string;
   /** Titre court au-dessus du formulaire. */
   title?: string;
   /** Fond clair ou sombre autour de la fiche (jamais de dégradé). */
@@ -87,7 +89,7 @@ function Field({ id, label, error, children }: { id: string; label: string; erro
 
 const inputClass = "w-full rounded-ui border border-sable-300 bg-white px-3 py-2.5 text-base text-anthracite placeholder:text-texte-doux/70 focus:border-ardoise-700";
 
-export default function LeadForm({ trades, tradeSlug, deptCode, ville, keyword, callbackText, title = "Décrivez votre chantier", className = "" }: Props) {
+export default function LeadForm({ trades, tradeSlug, deptCode, ville, keyword, callbackText, fallbackEmail, title = "Décrivez votre chantier", className = "" }: Props) {
   const pathname = usePathname();
   const uid = useId();
   const headingRef = useRef<HTMLHeadingElement>(null);
@@ -120,8 +122,49 @@ export default function LeadForm({ trades, tradeSlug, deptCode, ville, keyword, 
     }
   }
 
+  function label(options: Option[], value?: string) {
+    return options.find((o) => o.value === value)?.label ?? value ?? "";
+  }
+
+  /** Demande envoyée depuis la messagerie du visiteur, quand le service en ligne n'est pas encore branché. */
+  function sendByEmail() {
+    const e = validate(data);
+    setErrors(e);
+    if (Object.keys(e).length > 0) {
+      const firstStep = [1, 2, 3, 4, 5, 6, 7].find((n) => Object.keys(validate(data, n)).length > 0);
+      if (firstStep && firstStep !== TOTAL) setStep(firstStep - 1);
+      return;
+    }
+    const lines = [
+      "Bonjour,",
+      "",
+      "Je souhaite décrire un chantier :",
+      `Métier : ${trade?.nom ?? data.trade}`,
+      `Travaux : ${data.travaux}`,
+      `Ampleur : ${label(AMPLEUR, data.ampleur)}`,
+      `Code postal : ${data.codePostal}`,
+      `Délai : ${label(DELAIS, data.delai)}`,
+      `Budget : ${label(BUDGETS, data.budget)}`,
+      `Statut : ${label(STATUTS, data.statut)}`,
+      "",
+      `Nom : ${data.prenom} ${data.nom}`,
+      `Téléphone : ${data.telephone}`,
+      `E-mail : ${data.email}`,
+      "",
+      "J'accepte que ma demande soit transmise à des artisans partenaires sélectionnés.",
+      `Page : ${pathname}`,
+    ];
+    const href = `mailto:${fallbackEmail}?subject=${encodeURIComponent(`Demande de chantier : ${trade?.nom ?? data.trade}`)}&body=${encodeURIComponent(lines.join("\n"))}`;
+    window.location.href = href;
+    setDone({ ok: true, mode: "attente", message: "Votre messagerie s'est ouverte avec votre demande : envoyez le message pour que nous la recevions." });
+  }
+
   async function submit(ev: React.FormEvent) {
     ev.preventDefault();
+    if (fallbackEmail) {
+      sendByEmail();
+      return;
+    }
     const e = validate(data);
     setErrors(e);
     if (Object.keys(e).length > 0) {
@@ -326,6 +369,12 @@ export default function LeadForm({ trades, tradeSlug, deptCode, ville, keyword, 
               </p>
             </div>
 
+            {fallbackEmail && (
+              <p className="rounded-ui bg-ardoise-50 p-3 text-sm">
+                Notre formulaire en ligne est en cours de mise en service : à l'envoi, votre messagerie s'ouvre avec votre demande pré-remplie, adressée à {fallbackEmail}.
+              </p>
+            )}
+
             {failure && (
               <p className="rounded-ui border border-terre-200 bg-terre-50 p-3 text-sm font-medium text-terre-700" role="alert">
                 {failure}
@@ -348,7 +397,7 @@ export default function LeadForm({ trades, tradeSlug, deptCode, ville, keyword, 
             </button>
           ) : (
             <button type="submit" disabled={sending} className="rounded-ui bg-terre-500 px-6 py-3 text-base font-bold text-white transition-colors hover:bg-terre-600 disabled:opacity-60">
-              {sending ? "Envoi en cours" : "Envoyer ma demande"}
+              {sending ? "Envoi en cours" : fallbackEmail ? "Envoyer ma demande par e-mail" : "Envoyer ma demande"}
             </button>
           )}
         </div>

@@ -6,8 +6,10 @@ import { CONTENT_UPDATED } from "@/config/site";
 import { INDEXING_ON } from "@/config/publication";
 import { aboutPageLd, buildMetadata, type JsonLdObject } from "@/lib/seo";
 
-/** Valeur obligatoire manquante : visible dans le texte et bloque l'indexation de la page. */
+/** Valeur obligatoire manquante : visible en développement seulement ; bloque l'indexation de la page. */
 export function Missing({ label }: { label: string }) {
+  // En production, rien n'est affiché : on ne montre jamais un champ vide à un internaute. L'audit liste ce qui manque.
+  if (process.env.NODE_ENV === "production") return null;
   return <mark className="rounded-sm bg-terre-100 px-1.5 py-0.5 font-semibold text-terre-700">[à renseigner : {label}]</mark>;
 }
 

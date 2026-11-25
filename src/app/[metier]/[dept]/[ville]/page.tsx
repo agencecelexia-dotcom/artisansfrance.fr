@@ -50,7 +50,7 @@ export default async function VillePage({ params }: Props) {
   const lower = nom.toLowerCase();
   const covered = !!page.deptCode && COVERED_DEPARTMENTS.includes(page.deptCode);
   const voisinesPubliees = new Map(neighbourCities(page).map((c) => [geo.villes[c.url], c]));
-  const autresVilles = nearestPublishedCities(page, 6);
+  const autresVilles = nearestPublishedCities(page, 8);
   const guides = guidesOf(metier, ["probleme", "prix"]).slice(0, 3);
   const devis = guidesOf(metier, ["devis"]).slice(0, 2);
   const deptName = g?.nom ?? page.deptName ?? "";

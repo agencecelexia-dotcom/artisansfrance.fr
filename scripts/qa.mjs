@@ -87,7 +87,7 @@ for (const p of pages.values()) {
 const kind = (path) => {
   const parts = path.split("/").filter(Boolean);
   if (parts[0] === "prix") return "prix";
-  if (["guides", "aides", "devis"].includes(parts[0])) return parts[0];
+  if (["guides", "aides", "devis", "blog"].includes(parts[0])) return parts[0];
   if (parts.length === 1 && !["artisans", "zones", "cgu", "partenaires", "comment-ca-marche", "mentions-legales", "nos-artisans", "plan-du-site", "classement-et-selection", "politique-de-confidentialite", "quel-site-pour-trouver-un-artisan"].includes(parts[0])) return "hub";
   if (parts.length === 2 && !["artisans"].includes(parts[0])) return /^[a-z]+-[a-z-]+$/.test(parts[1]) && !/^\d/.test(parts[1]) && !/^2[ab]-/.test(parts[1]) ? "region" : "dept";
   if (parts.length === 3 && parts[0] !== "artisans") return "ville";
@@ -105,24 +105,27 @@ function shingles(text, n = 5) {
 }
 const uniq = [];
 const gate = [];
+// Locales : comparées entre pages du même métier. Éditoriales : comparées entre pages du même gabarit.
+const groups = [];
 for (const k of ["dept", "ville"]) {
-  const group = (byKind.get(k) ?? []).filter((p) => !p.path.startsWith("/artisans"));
   const byTrade = new Map();
-  for (const p of group) byTrade.set(p.path.split("/")[1], [...(byTrade.get(p.path.split("/")[1]) ?? []), p]);
-  for (const list of byTrade.values()) {
-    const counts = new Map();
-    const sh = list.map((p) => shingles(p.text));
-    sh.forEach((set) => set.forEach((s) => counts.set(s, (counts.get(s) ?? 0) + 1)));
-    list.forEach((p, i) => {
-      const own = [...sh[i]].filter((s) => counts.get(s) === 1).length;
-      const share = sh[i].size ? own / sh[i].size : 0;
-      uniq.push({ path: p.path, kind: k, share, words: p.words });
-      if (list.length > 1 && (share < 0.3 || p.words < 300)) gate.push(p.path);
-      if (list.length > 1 && share < 0.3) warn(p.path, `contenu propre faible : ${(share * 100).toFixed(0)} % (seuil 30 %)`);
-      else if (list.length > 1 && share < 0.4) warn(p.path, `contenu propre sous 40 % : ${(share * 100).toFixed(0)} %`);
-      if (p.words < 300) warn(p.path, `moins de 300 mots (${p.words})`);
-    });
-  }
+  for (const p of (byKind.get(k) ?? []).filter((p) => !p.path.startsWith("/artisans"))) byTrade.set(p.path.split("/")[1], [...(byTrade.get(p.path.split("/")[1]) ?? []), p]);
+  for (const list of byTrade.values()) groups.push([k, list]);
+}
+for (const k of ["prix", "devis", "guides", "aides", "blog"]) if (byKind.get(k)) groups.push([k, byKind.get(k)]);
+for (const [k, list] of groups) {
+  const counts = new Map();
+  const sh = list.map((p) => shingles(p.text));
+  sh.forEach((set) => set.forEach((x) => counts.set(x, (counts.get(x) ?? 0) + 1)));
+  list.forEach((p, i) => {
+    const own = [...sh[i]].filter((x) => counts.get(x) === 1).length;
+    const share = sh[i].size ? own / sh[i].size : 0;
+    uniq.push({ path: p.path, kind: k, share, words: p.words });
+    if (list.length > 1 && (share < 0.3 || p.words < 300)) gate.push(p.path);
+    if (list.length > 1 && share < 0.3) warn(p.path, `contenu propre faible : ${(share * 100).toFixed(0)} % (seuil 30 %)`);
+    else if (list.length > 1 && share < 0.4) warn(p.path, `contenu propre sous 40 % : ${(share * 100).toFixed(0)} %`);
+    if (p.words < 300) warn(p.path, `moins de 300 mots (${p.words})`);
+  });
 }
 
 const stat = (arr) => (arr.length ? { n: arr.length, min: Math.min(...arr), moy: Math.round(arr.reduce((a, b) => a + b, 0) / arr.length), max: Math.max(...arr) } : null);
@@ -132,7 +135,7 @@ lines.push(`Pages HTML analysées : ${pages.size}. Indexables : ${[...pages.valu
 lines.push("## Mots par gabarit", "", "| Gabarit | Pages | Min | Moyenne | Max |", "|---|---|---|---|---|");
 for (const [k, list] of byKind) { const s = stat(list.map((p) => p.words)); lines.push(`| ${k} | ${s.n} | ${s.min} | ${s.moy} | ${s.max} |`); }
 lines.push("", "## Contenu propre des pages locales (séquences de 5 mots absentes des autres pages du même métier)", "", "| Gabarit | Pages | Min | Moyenne | Max |", "|---|---|---|---|---|");
-for (const k of ["dept", "ville"]) { const s = stat(uniq.filter((u) => u.kind === k).map((u) => Math.round(u.share * 100))); if (s) lines.push(`| ${k} | ${s.n} | ${s.min} % | ${s.moy} % | ${s.max} % |`); }
+for (const k of ["dept", "ville", "prix", "devis", "guides", "aides", "blog"]) { const s = stat(uniq.filter((u) => u.kind === k).map((u) => Math.round(u.share * 100))); if (s) lines.push(`| ${k} | ${s.n} | ${s.min} % | ${s.moy} % | ${s.max} % |`); }
 lines.push("", `## Problèmes (${problems.length})`, "");
 const grouped = new Map();
 for (const pr of problems) { const key = pr.msg.replace(/[0-9]+/g, "N").replace(/ : .*/, ""); grouped.set(key, [...(grouped.get(key) ?? []), pr]); }
